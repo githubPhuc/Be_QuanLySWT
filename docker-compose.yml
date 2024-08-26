@@ -1,0 +1,5 @@
+services:
+  zot:
+    build: .
+    ports:
+      - 8081:80
