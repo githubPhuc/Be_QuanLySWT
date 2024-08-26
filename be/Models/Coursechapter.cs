@@ -27,6 +27,10 @@ public partial class Coursechapter
 
     public bool? Status { get; set; }
 
+    public int? GradeId { get; set; }
+
+    public virtual Grade? Grade { get; set; }
+
     public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
 
     public virtual Subject? Subjec { get; set; }

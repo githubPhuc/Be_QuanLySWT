@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-
 namespace be.Models;
 
 public partial class SwtDbContext : DbContext
@@ -22,6 +21,8 @@ public partial class SwtDbContext : DbContext
     public virtual DbSet<Combination> Combinations { get; set; }
 
     public virtual DbSet<Coursechapter> Coursechapters { get; set; }
+
+    public virtual DbSet<Grade> Grades { get; set; }
 
     public virtual DbSet<Groupsubject> Groupsubjects { get; set; }
 
@@ -138,9 +139,23 @@ public partial class SwtDbContext : DbContext
                 .HasMaxLength(10)
                 .IsFixedLength();
 
+            entity.HasOne(d => d.Grade).WithMany(p => p.Coursechapters)
+                .HasForeignKey(d => d.GradeId)
+                .HasConstraintName("FK_COURSECHAPTER_GRADES");
+
             entity.HasOne(d => d.Subjec).WithMany(p => p.Coursechapters)
                 .HasForeignKey(d => d.SubjecId)
                 .HasConstraintName("FK_CourseChapter_SUBJECTS");
+        });
+
+        modelBuilder.Entity<Grade>(entity =>
+        {
+            entity.ToTable("GRADES");
+
+            entity.Property(e => e.DateCreated).HasColumnType("datetime");
+            entity.Property(e => e.DateDelete).HasColumnType("datetime");
+            entity.Property(e => e.DateUpdated).HasColumnType("datetime");
+            entity.Property(e => e.Status).HasMaxLength(20);
         });
 
         modelBuilder.Entity<Groupsubject>(entity =>
@@ -466,6 +481,10 @@ public partial class SwtDbContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false);
             entity.Property(e => e.TopicName).HasMaxLength(200);
+
+            entity.HasOne(d => d.Subject).WithMany(p => p.Topics)
+                .HasForeignKey(d => d.SubjectId)
+                .HasConstraintName("FK_TOPICS_SUBJECTS");
         });
 
         OnModelCreatingPartial(modelBuilder);

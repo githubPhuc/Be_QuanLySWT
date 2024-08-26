@@ -40,4 +40,6 @@ public partial class Topic
     public DateTime? DateDelete { get; set; }
 
     public virtual ICollection<Question> Questions { get; set; } = new List<Question>();
+
+    public virtual Subject? Subject { get; set; }
 }

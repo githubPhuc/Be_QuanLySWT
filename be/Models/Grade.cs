@@ -3,13 +3,11 @@ using System.Collections.Generic;
 
 namespace be.Models;
 
-public partial class Subject
+public partial class Grade
 {
-    public int SubjectId { get; set; }
+    public int GradeId { get; set; }
 
-    public string? SubjectName { get; set; }
-
-    public string? ImgLink { get; set; }
+    public string? NameGrade { get; set; }
 
     public string? Status { get; set; }
 
@@ -28,8 +26,4 @@ public partial class Subject
     public DateTime? DateDelete { get; set; }
 
     public virtual ICollection<Coursechapter> Coursechapters { get; set; } = new List<Coursechapter>();
-
-    public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
-
-    public virtual ICollection<Topic> Topics { get; set; } = new List<Topic>();
 }
