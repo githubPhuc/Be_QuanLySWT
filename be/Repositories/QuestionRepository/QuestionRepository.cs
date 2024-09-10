@@ -185,6 +185,7 @@ namespace be.Repositories.QuestionRepository
                 questionByTopicIdDTO.questionId = question.QuestionId;
                 questionByTopicIdDTO.subjectId = subject.SubjectId;
                 questionByTopicIdDTO.subjectName = subject.SubjectName;
+                questionByTopicIdDTO.questionContent = question.QuestionContext;
                 questionByTopicIdDTO.accountId = accountId.AccountId;
                 questionByTopicIdDTO.accountName = accountId.FullName;
                 questionByTopicIdDTO.answerId = answer.AnswerId;
@@ -204,31 +205,6 @@ namespace be.Repositories.QuestionRepository
                 questionByTopicIdDTO.statusString = question.Status == "0" ? "Chờ duyệt" : question.Status == "1" ? "Đã duyệt" : "Khóa";
                 result.Add(questionByTopicIdDTO);
             }
-
-            //var result = query.ToList().Select(question => new
-            //{
-            //    questionId = question.QuestionId,
-            //    subjectId = question.SubjectId,
-            //    subjectName = question.Subject?.SubjectName,
-            //    accountId = question.AccountId,
-            //    accountName = question.Account?.FullName,
-            //    answerId = question.AnswerId,
-            //    answer = question.Answer?.AnswerName,
-            //    level = question.Level?.LevelName,
-            //    levelId = question.Level?.LevelId,
-            //    topic = question.Topic?.TopicName,
-            //    topicId = question.Topic?.TopicId,
-            //    image = question.Image,
-            //    questionContent = question.QuestionContext,
-            //    optionA = question.OptionA,
-            //    optionB = question.OptionB,
-            //    optionC = question.OptionC,
-            //    optionD = question.OptionD,
-            //    solution = question.Solution,
-            //    status = question.Status,
-            //    createDate = question.CreateDate,
-            //    statusString = question.Status == "0" ? "Chờ duyệt" : question.Status == "1" ? "Đã duyệt" : "Khóa",
-            //});
 
             if (result == null)
             {

@@ -26,6 +26,7 @@ public partial class Coursechapter
     public int? AccountDelete { get; set; }
 
     public bool? Status { get; set; }
+    public bool? IsDelete { get; set; }
 
     public int? GradeId { get; set; }
 

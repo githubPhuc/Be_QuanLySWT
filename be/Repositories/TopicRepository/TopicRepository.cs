@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data.Entity.Core.Mapping;
 using System.Diagnostics;
 using be.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace be.Repositories.TopicRepository
 {
@@ -153,14 +154,28 @@ namespace be.Repositories.TopicRepository
 
         public object GetAllTopic()
         {
-            List<TopicDTO> topicList = new List<TopicDTO>();
             var subjectList = _context.Subjects.ToList();
+            var GradesList = _context.Grades.ToList();
+            
+
+            List < TopicDTO > topicList = new List<TopicDTO>();
             foreach (var item in _context.Topics)
             {
                 TopicDTO topicDTO = new TopicDTO();
                 topicDTO.TopicId = item.TopicId;
                 var subject = subjectList.SingleOrDefault(x => x.SubjectId == item.SubjectId);
                 topicDTO.SubjectId = subject.SubjectId;
+                if(item.Grade != null)
+                {
+                    var graden = GradesList.Where(a => a.GradeId == item.Grade).FirstOrDefault();
+                    topicDTO.Grade = graden?.NameGrade ?? "";
+                    topicDTO.GradeId = graden?.GradeId ?? 0;
+                }
+                else
+                {
+                    topicDTO.Grade = "";
+                    topicDTO.GradeId = 0;
+                }
                 topicDTO.SubjectName = subject.SubjectName;
                 topicDTO.TopicName = item.TopicName;
                 topicDTO.Duration = item.Duration;
@@ -190,7 +205,6 @@ namespace be.Repositories.TopicRepository
                 {
                     topicDTO.TopicTypeName = "Cuộc thi chung";
                 }
-                topicDTO.Grade = item.Grade;
                 topicDTO.CreateDate = item.DateCreated;
                 if (item.Status == "0")
                 {

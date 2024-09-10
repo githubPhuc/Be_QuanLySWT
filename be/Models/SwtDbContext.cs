@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+
 namespace be.Models;
 
 public partial class SwtDbContext : DbContext

@@ -11,7 +11,8 @@
         public string? SubjectName { get; set; }
         public int? TopicType { get; set; }
         public string? TopicTypeName { get; set; }
-        public int? Grade { get; set; }
+        public int? GradeId { get; set; }
+        public string? Grade { get; set; }
         public DateTime? CreateDate { get; set; }
         public string? Status { get; set; }
         public string? StartTestDate { get; set; }

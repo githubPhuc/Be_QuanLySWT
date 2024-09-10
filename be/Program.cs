@@ -53,6 +53,8 @@ builder.Services.AddCors();
 var services = builder.Services;
 services.AddHttpContextAccessor();
 
+services.AddScoped<ICouseCharterRepository, CouseCharterRepository>();
+
 services.AddScoped<IModRepository, ModRepository>();
 services.AddScoped<IModService, ModService>();
 

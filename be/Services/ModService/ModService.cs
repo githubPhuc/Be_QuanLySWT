@@ -1,6 +1,7 @@
 ﻿using be.DTOs;
 using be.Models;
 using be.Repositories.ModRepository;
+using be.Repositories.NewsRepository;
 
 namespace be.Services.ModService
 {
