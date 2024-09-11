@@ -5,16 +5,19 @@ using System.Data.Entity.Core.Mapping;
 using System.Diagnostics;
 using be.DTOs;
 using Microsoft.EntityFrameworkCore;
+using be.Helper;
 
 namespace be.Repositories.TopicRepository
 {
     public class TopicRepository : ITopicRepository
     {
         private readonly SwtDbContext _context;
+        private readonly Defines _Defines;
 
         public TopicRepository()
         {
             _context = new SwtDbContext();
+            _Defines = new Defines();
         }
 
         public object ChangeStatusTopic(int topicId, string status)
@@ -241,11 +244,9 @@ namespace be.Repositories.TopicRepository
         public async Task<object> GetTopicByGrade(int? grade, int subjectId, int? topicType, int accountId)
         {
             var listTopic = (from topic in _context.Topics
-                             join question in _context.Questions
-                             on topic.TopicId equals question.TopicId
-                             join subject in _context.Subjects
-                             on question.CourseChapterId equals subject.SubjectId
-                             where topic.Grade == grade && subject.SubjectId == subjectId && topic.TopicType == topicType && topic.Status == "1" && question.Status == "1"
+                             join subject in _context.Subjects on topic.SubjectId equals subject.SubjectId
+                             where topic.Grade == grade && subject.SubjectId == subjectId && topic.TopicType == topicType 
+                             where topic.IsDelete == false && topic.Status == _Defines.ACTIVE_STRING
                              select new
                              {
                                  topic.TopicId,
@@ -278,16 +279,11 @@ namespace be.Repositories.TopicRepository
                 listTopic = listTopic.Where(x => x.TopicType == topicType).Where(y => y.Grade == grade).ToList();
             }
             var listTopicSubmited = (from topic in _context.Topics
-                                     join question in _context.Questions
-                                     on topic.TopicId equals question.TopicId
-                                     join questionTest in _context.Questiontests
-                                     on question.QuestionId equals questionTest.QuestionId
-                                     join testDetail in _context.Testdetails
-                                     on questionTest.TestDetailId equals testDetail.TestDetailId
-                                     join account in _context.Accounts
-                                     on testDetail.AccountId equals account.AccountId
-                                     join subject in _context.Subjects
-                                     on question.CourseChapterId equals subject.SubjectId
+                                     join question in _context.Questions on topic.TopicId equals question.TopicId
+                                     join questionTest in _context.Questiontests on question.QuestionId equals questionTest.QuestionId
+                                     join testDetail in _context.Testdetails on questionTest.TestDetailId equals testDetail.TestDetailId
+                                     join account in _context.Accounts on testDetail.AccountId equals account.AccountId
+                                     join subject in _context.Subjects on question.CourseChapterId equals subject.SubjectId
                                      where account.AccountId == accountId && testDetail.Submitted == true
                                      select new
                                      {
@@ -304,6 +300,8 @@ namespace be.Repositories.TopicRepository
                 var topicDTO = new TopicDTO();
                 topicDTO.TopicId = item.TopicId;
                 topicDTO.TopicName = item.TopicName;
+                topicDTO.SubjectName = item.SubjectName;
+                topicDTO.SubjectId = item.SubjectId;
                 var totalQuestion = (from topic in _context.Topics
                                      join question in _context.Questions
                                      on topic.TopicId equals question.TopicId

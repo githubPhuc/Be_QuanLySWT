@@ -6,5 +6,13 @@
         {
             get { return 10; }
         }
+        public string ACTIVE_STRING
+        {
+            get { return "ACTIVE"; }
+        }
+        public string INACTIVE_STRING
+        {
+            get { return "INACTIVE"; }
+        }
     }
 }

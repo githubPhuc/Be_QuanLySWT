@@ -51,7 +51,7 @@ namespace be.Repositories.ModRepository
                                         ChapterTitle = a.ChapterTitle,
                                         MainContent = a.MainContent,
                                         SubjecId = a.SubjecId,
-                                    }).ToListAsync();
+                                    }).OrderByDescending(a=>a.SubjecId).ThenByDescending(a=>a.DateCreated).ToListAsync();
                 return result;
 
             }
@@ -71,7 +71,7 @@ namespace be.Repositories.ModRepository
                 var result = await (from a in _Coursechapters
                                     where a.GradeId == GradeId && a.SubjecId ==SubjectId
                                     where (string.IsNullOrEmpty(ChapterSearch) == true) || a.ChapterTitle.ToLower().Contains(ChapterSearch.ToLower())
-                                    where a.IsDelete == false
+                                    where a.IsDelete == false && a.Status == true
                                     select new getCouseCharter()
                                     {
                                         AccountDelete = a.AccountDelete,
@@ -106,7 +106,7 @@ namespace be.Repositories.ModRepository
                 var _Questions = _context.Questions.AsNoTracking();
                 var _Level = _context.Levels.AsNoTracking();
                 var _Topics = _context.Topics.AsNoTracking();
-                var _Coursechapters = _context.Coursechapters.Where(a => a.IsDelete == false).AsNoTracking();
+                var _Coursechapters = _context.Coursechapters.Where(a => a.Status == true && a.IsDelete == false).AsNoTracking();
                 if(_Coursechapters.Count()>0)
                 {
                     var result = await (from a in _Questions
@@ -473,6 +473,27 @@ namespace be.Repositories.ModRepository
                 throw new Exception($"Error {ex.Message}");
             }
         }
+        public async Task<string> AddExcelQuestionInCourseChapterID(int CourseChapterID, int AccountId)
+        {
+            try
+            {
 
+                var data = await _context.Coursechapters.Where(a => a.ChapterId == CourseChapterID).FirstOrDefaultAsync();
+                if (data == null)
+                {
+                    throw new Exception("Data Coursechapters already exists.");
+                }
+                else
+                {
+                    _context.Coursechapters.Add(data);
+                    await _context.SaveChangesAsync();
+                    return $"Add success.";
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error {ex.Message}");
+            }
+        }
     }
 }
