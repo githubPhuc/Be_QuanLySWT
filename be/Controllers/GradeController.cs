@@ -32,7 +32,7 @@ namespace be.Controllers
                 return BadRequest(responseAPI);
             }
         }
-        [HttpGet("CreateGrade")]
+        [HttpPost("CreateGrade")]
         public async Task<ActionResult> CreateGrade(string NameGrade, int AccountId)
         {
             ReponserApiService<string> responseAPI = new ReponserApiService<string>();
@@ -49,7 +49,7 @@ namespace be.Controllers
                 return BadRequest(responseAPI);
             }
         }
-        [HttpGet("UpdateGrade")]
+        [HttpPost("UpdateGrade")]
         public async Task<ActionResult> UpdateGrade(int GradeId, string NameGrade, int AccountId)
         {
             ReponserApiService<string> responseAPI = new ReponserApiService<string>();
@@ -66,7 +66,7 @@ namespace be.Controllers
                 return BadRequest(responseAPI);
             }
         }
-        [HttpGet("DeleteGrade")]
+        [HttpPost("DeleteGrade")]
         public async Task<ActionResult> DeleteGrade(int GradeId, int AccountId)
         {
             ReponserApiService<string> responseAPI = new ReponserApiService<string>();

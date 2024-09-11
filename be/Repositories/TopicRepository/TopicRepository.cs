@@ -336,7 +336,7 @@ namespace be.Repositories.TopicRepository
                 data,
             };
         }
-
+        
         public object GetTopicById(int topicId)
         {
             var result = from topic in _context.Topics where topic.TopicId == topicId
