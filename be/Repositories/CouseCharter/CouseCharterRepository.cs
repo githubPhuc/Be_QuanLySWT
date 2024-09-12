@@ -499,7 +499,7 @@ namespace be.Repositories.ModRepository
                                     int totalRows = worksheet.Dimension.Rows;
                                     var dataToInsert = new List<ExcelUploadQuestion>();
                                     var uniqueDataDictionary = new Dictionary<string, int>();
-                                    for (int row = 2; row <= totalRows; row++)
+                                    for (int row = 5; row <= totalRows; row++)
                                     {
                                         var data_ = new ExcelUploadQuestion
                                         {
