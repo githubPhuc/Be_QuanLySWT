@@ -89,7 +89,6 @@ namespace be.Repositories.CouseCharter
     }
     public class PostDataInsertQuestionInCourseChapterID
     {
-        public int? IdCourceChapter { get; set; }
         public int? AccountId { get; set; }
         public int? CourseChapterId { get; set; }
         public int? AnswerId { get; set; }
