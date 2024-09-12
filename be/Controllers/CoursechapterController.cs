@@ -235,5 +235,24 @@ namespace be.Controllers
                 return BadRequest(responseAPI);
             }
         }
+
+        [HttpPost("AddExcelQuestionInCourseChapterID")]
+        public async Task<ActionResult> AddExcelQuestionInCourseChapterID(IFormFile file, int AccountId, int CourseChapterID)
+        {
+            ReponserApiService<string> responseAPI = new ReponserApiService<string>();
+            try
+            {
+                var data = await _contextICouseCharterRepository.AddExcelQuestionInCourseChapterID(file, AccountId, CourseChapterID);
+                responseAPI.Data = null;
+                responseAPI.Count = 1;
+                responseAPI.Message = data;
+                return Ok(responseAPI);
+            }
+            catch (Exception ex)
+            {
+                responseAPI.Message = ex.Message;
+                return BadRequest(responseAPI);
+            }
+        }
     }
 }

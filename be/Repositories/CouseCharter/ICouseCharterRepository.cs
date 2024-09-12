@@ -18,5 +18,6 @@ namespace be.Repositories.ModRepository
         public Task<string> AddQuestionInCourseChapterID(PostDataInsertQuestionInCourseChapterID model);
         public Task<string> UpdateQuestionInCourseChapterID(PostDataInsertQuestionInCourseChapterID model, int QuestionId);
         public Task<string> DeleteQuestionInCourseChapterID(int QuestionId, int AccountId);
+        public Task<string> AddExcelQuestionInCourseChapterID(IFormFile file, int AccountId, int CourseChapterID);
     }
 }
