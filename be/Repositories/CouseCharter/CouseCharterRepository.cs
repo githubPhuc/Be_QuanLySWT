@@ -3,6 +3,7 @@ using be.Helper;
 using be.Models;
 using be.Repositories.CouseCharter;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using OfficeOpenXml;
 using System.ComponentModel;
 using LicenseContext = OfficeOpenXml.LicenseContext;
@@ -503,15 +504,15 @@ namespace be.Repositories.ModRepository
                                     {
                                         var data_ = new ExcelUploadQuestion
                                         {
-                                            UrlImage = worksheet.Cells[row, 1].Value?.ToString() ?? "",
-                                            QuestionContext = worksheet.Cells[row, 2].Value?.ToString() ?? "",
-                                            OptionA = worksheet.Cells[row, 3].Value?.ToString() ?? "",
-                                            OptionB = worksheet.Cells[row, 4].Value?.ToString() ?? "",
-                                            OptionC = worksheet.Cells[row, 5].Value?.ToString() ?? "",
-                                            OptionD = worksheet.Cells[row, 6].Value?.ToString() ?? "",
-                                            Solution = worksheet.Cells[row, 7].Value?.ToString() ?? "",
-                                            Answer = worksheet.Cells[row, 8].Value?.ToString() ?? "",
-                                            LevelName = worksheet.Cells[row, 9].Value?.ToString() ?? ""
+                                            UrlImage = worksheet.Cells[row, 2].Value?.ToString() ?? "",
+                                            QuestionContext = worksheet.Cells[row, 3].Value?.ToString() ?? "",
+                                            OptionA = worksheet.Cells[row, 4].Value?.ToString() ?? "",
+                                            OptionB = worksheet.Cells[row, 5].Value?.ToString() ?? "",
+                                            OptionC = worksheet.Cells[row, 6].Value?.ToString() ?? "",
+                                            OptionD = worksheet.Cells[row, 7].Value?.ToString() ?? "",
+                                            Solution = worksheet.Cells[row, 8].Value?.ToString() ?? "",
+                                            Answer = worksheet.Cells[row, 9].Value?.ToString() ?? "",
+                                            LevelName = worksheet.Cells[row, 1].Value?.ToString() ?? ""
                                         };
                                         string uniqueKey = $"{data_.UrlImage}-{data_.QuestionContext}-{data_.OptionA}-{data_.OptionB}-{data_.OptionC}-{data_.OptionD}-{data_.Solution}-{data_.LevelName}";
 
@@ -526,27 +527,34 @@ namespace be.Repositories.ModRepository
                                     var _Rerult = new List<Question>();
                                     foreach (var item in dataToInsert)
                                     {
-                                        _Rerult.Add( new Question()
+                                        if(!string.IsNullOrEmpty(item.QuestionContext)&&
+                                            !string.IsNullOrEmpty(item.OptionA) &&
+                                            !string.IsNullOrEmpty(item.OptionB) &&
+                                            !string.IsNullOrEmpty(item.OptionC) &&
+                                            !string.IsNullOrEmpty(item.OptionD))
                                         {
-                                            DateCreated = DateTime.UtcNow.AddHours(7),
-                                            DateUpdated = DateTime.UtcNow.AddHours(7),
-                                            DateDelete = DateTime.UtcNow.AddHours(7),
-                                            CourseChapterId = CourseChapterID,
-                                            UserCreated = AccountId,
-                                            UserUpdated = AccountId,
-                                            UserDelete = AccountId,
-                                            QuestionContext = item.QuestionContext,
-                                            AnswerId = _Answer.Where(a=>a.AnswerName ==item.Answer).FirstOrDefault()?.AnswerId??0,
-                                            OptionA = item.OptionA,
-                                            OptionB = item.OptionB,
-                                            OptionC = item.OptionC,
-                                            OptionD = item.OptionD,
-                                            Solution = item.Solution,
-                                            Image = item.UrlImage,
-                                            Status = "Inactive",
-                                            IsDelete = false,
-                                            LevelId = _Levels.Where(a => a.LevelName == item.LevelName).FirstOrDefault()?.LevelId ?? 0,
-                                        });
+                                            _Rerult.Add(new Question()
+                                            {
+                                                DateCreated = DateTime.UtcNow.AddHours(7),
+                                                DateUpdated = DateTime.UtcNow.AddHours(7),
+                                                DateDelete = DateTime.UtcNow.AddHours(7),
+                                                CourseChapterId = CourseChapterID,
+                                                UserCreated = AccountId,
+                                                UserUpdated = AccountId,
+                                                UserDelete = AccountId,
+                                                QuestionContext = item.QuestionContext,
+                                                AnswerId = _Answer.Where(a => a.AnswerName == item.Answer).FirstOrDefault()?.AnswerId ?? 0,
+                                                OptionA = item.OptionA,
+                                                OptionB = item.OptionB,
+                                                OptionC = item.OptionC,
+                                                OptionD = item.OptionD,
+                                                Solution = item.Solution,
+                                                Image = item.UrlImage,
+                                                Status = "Inactive",
+                                                IsDelete = false,
+                                                LevelId = _Levels.Where(a => a.LevelName == item.LevelName).FirstOrDefault()?.LevelId ?? 0,
+                                            });
+                                        }
                                     }
                                     if (_Rerult.Count() > 0)
                                     {
