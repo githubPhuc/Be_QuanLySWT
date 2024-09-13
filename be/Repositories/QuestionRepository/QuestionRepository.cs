@@ -2,16 +2,18 @@
 using be.Models;
 using Microsoft.Identity.Client;
 using Microsoft.EntityFrameworkCore;
+using be.Helper;
 
 namespace be.Repositories.QuestionRepository
 {
     public class QuestionRepository : IQuestionRepository
     {
         private readonly SwtDbContext _context;
-
+        private readonly Defines _defines;
         public QuestionRepository()
         {
             _context = new SwtDbContext();
+            _defines = new Defines();
         }
 
         public void AddQuestionByExcel(Question question)
@@ -214,11 +216,14 @@ namespace be.Repositories.QuestionRepository
                     status = 400,
                 };
             }
+            var random = new Random();
+            var shuffledList = result.OrderBy(x => random.Next()).ToList();
+            var randomTenRows = shuffledList.Take(_defines.NUMBER_RANDOM_TOPIC).OrderByDescending(x => x.questionId).ToList();
             return new
             {
                 message = "Get data successfully",
                 status = 200,
-                data = result.OrderByDescending(x => x.questionId).ToList(),
+                data = randomTenRows.OrderByDescending(x => x.questionId).ToList(),
             };
         }
 

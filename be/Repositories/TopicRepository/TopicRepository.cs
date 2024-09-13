@@ -45,27 +45,51 @@ namespace be.Repositories.TopicRepository
         {
             try
             {
-                var topic = new Topic();
-                topic.TopicName = createTopic.TopicName;
-                topic.Grade = createTopic.Grade;
-                topic.SubjectId = createTopic.SubjectId;
-                if(createTopic.Duration != null || createTopic.Duration != "null")
+                if (createTopic.SubjectId > 0)
                 {
-                    topic.Duration = createTopic.Duration;
+                    if (!string.IsNullOrEmpty(createTopic.TopicName))
+                    {
+                        var topic = new Topic();
+                        topic.TopicName = createTopic.TopicName;
+                        topic.Grade = createTopic.Grade;
+                        topic.SubjectId = createTopic.SubjectId;
+                        if(createTopic.Duration != null || createTopic.Duration != "null")
+                        {
+                            topic.Duration = createTopic.Duration;
+                        }
+                        topic.TotalQuestion = 0;
+                        topic.TopicType = createTopic.TopicType;
+                        topic.DateCreated = DateTime.Now;
+                        topic.Status = "0";
+                        topic.StartTestDate =  createTopic.StartTestDate;
+                        topic.FinishTestDate = createTopic.FinishTestDate;
+                        _context.Topics.Add(topic);
+                        _context.SaveChanges();
+                        return new
+                        {
+                            message = "Add successfully",
+                            status = 200,
+                            data = topic,
+                        };
+
+                    }
+                    else
+                    {
+                        return new
+                        {
+                            message = "Topic Name null",
+                            status = 400,
+                        };
+                    }
                 }
-                topic.TopicType = createTopic.TopicType;
-                topic.DateCreated = DateTime.Now;
-                topic.Status = "0";
-                topic.StartTestDate =  createTopic.StartTestDate;
-                topic.FinishTestDate = createTopic.FinishTestDate;
-                _context.Topics.Add(topic);
-                _context.SaveChanges();
-                return new
+                else
                 {
-                    message = "Add successfully",
-                    status = 200,
-                    data = topic,
-                };
+                    return new
+                    {
+                        message = "Subject null",
+                        status = 400,
+                    };
+                }
             } catch
             {
                 return new
@@ -408,5 +432,9 @@ namespace be.Repositories.TopicRepository
                 data,
             };
         }
+
+
+
+        
     }
 }

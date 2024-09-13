@@ -6,6 +6,10 @@
         {
             get { return 10; }
         }
+        public int NUMBER_RANDOM_TOPIC
+        {
+            get { return 10; }
+        }
         public string ACTIVE_STRING
         {
             get { return "ACTIVE"; }

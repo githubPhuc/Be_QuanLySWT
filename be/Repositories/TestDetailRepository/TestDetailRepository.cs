@@ -44,7 +44,7 @@ namespace be.Repositories.TestDetailRepository
                 var getQuestion = _context.Questiontests.Where(x => x.TestDetailId == testDetail.TestDetailId).FirstOrDefault();
                 var question = _context.Questions.SingleOrDefault(x => x.QuestionId == getQuestion.QuestionId);
                 var subject = _context.Subjects.SingleOrDefault(x => x.SubjectId == question.CourseChapterId);
-                historyDTO.SubjectName = subject.SubjectName;
+                historyDTO.SubjectName = subject.SubjectName;// lỗi 
                 var topic = _context.Topics.SingleOrDefault(x => x.TopicId == question.TopicId);
                 historyDTO.Topic = topic.TopicName;
                 historyDTO.Duration = topic.Duration;
@@ -60,6 +60,7 @@ namespace be.Repositories.TestDetailRepository
                 historyDTO.TotalQuestion = totalQuestion;
                 testHistory.Add(historyDTO);
             }
+
             if (testHistory == null)
             {
                 return new

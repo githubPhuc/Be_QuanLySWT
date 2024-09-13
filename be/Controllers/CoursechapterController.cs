@@ -254,5 +254,24 @@ namespace be.Controllers
                 return BadRequest(responseAPI);
             }
         }
+        [HttpPost("AddQuestionInCourseChapterByTopic")]
+        public async Task<ActionResult> AddQuestionInCourseChapterByTopic(AddQuestionInCourseChapterByTopicModel model)
+        {
+            ReponserApiService<string> responseAPI = new ReponserApiService<string>();
+            try
+            {
+                var data = await _contextICouseCharterRepository.AddQuestionInCourseChapterByTopic(model);
+                responseAPI.Data = null;
+                responseAPI.Count = 1;
+                responseAPI.Message = data;
+                return Ok(responseAPI);
+            }
+            catch (Exception ex)
+            {
+                responseAPI.Message = ex.Message;
+                return BadRequest(responseAPI);
+            }
+        }
+
     }
 }

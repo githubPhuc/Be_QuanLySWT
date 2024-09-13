@@ -475,6 +475,11 @@ namespace be.Repositories.ModRepository
         {
             try
             {
+                var checkCource =await _context.Coursechapters.Where(a => a.ChapterId == CourseChapterID).FirstOrDefaultAsync();
+                if(checkCource == null)
+                {
+                    throw new Exception("Course chapters not exits.");
+                }
                 if (file == null || file.Length == 0) { throw new Exception("File not exist!!"); }
                 else
                 {
@@ -579,6 +584,44 @@ namespace be.Repositories.ModRepository
                 throw new Exception(ex.Message);
             }
         }
+        public async Task<string> AddQuestionInCourseChapterByTopic(AddQuestionInCourseChapterByTopicModel model)
+        {
+            try
+            {
+                if (model.LstQuestionId.Count() > 0)
+                {
+                    if (model.TopicId > 0)
+                    {
+                        foreach (var item in model.LstQuestionId)
+                        {
+                            var data = await _context.Questions.Where(a => a.QuestionId == item).FirstOrDefaultAsync();
+                            if (data != null)
+                            {
+                                data.TopicId = model.TopicId;
+                                data.DateUpdated = DateTime.UtcNow.AddHours(7);
+                                data.UserUpdated = model.AccountId;
+                                _context.Questions.Update(data);
+                                await _context.SaveChangesAsync();
+                            }
+                        }
+                        return "Add question success";
+                    }
+                    else
+                    {
+                        throw new Exception("Please select a Topic.");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Please select a question.");
+                }
 
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
     }
 }

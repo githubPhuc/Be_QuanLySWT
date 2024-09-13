@@ -1,4 +1,5 @@
 ﻿using be.DTOs;
+using be.Repositories.TopicRepository;
 
 namespace be.Services.TopicService
 {

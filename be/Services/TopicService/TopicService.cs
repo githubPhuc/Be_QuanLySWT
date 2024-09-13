@@ -11,7 +11,6 @@ namespace be.Services.TopicService
         {
             _topicRepository = new TopicRepository();
         }
-
         public object ChangeStatusTopic(int topicId, string status)
         {
             return _topicRepository.ChangeStatusTopic(topicId, status); 

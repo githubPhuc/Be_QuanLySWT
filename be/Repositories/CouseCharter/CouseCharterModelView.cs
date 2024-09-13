@@ -113,4 +113,10 @@ namespace be.Repositories.CouseCharter
         public string? Solution { get; set; }
         public string? Answer { get; set; }
     }
+    public class AddQuestionInCourseChapterByTopicModel
+    {
+        public int TopicId { get; set; }
+        public int AccountId { get; set; }
+        public List<int> LstQuestionId { get; set; }
+    }
 }

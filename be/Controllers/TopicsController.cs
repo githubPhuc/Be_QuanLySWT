@@ -1,8 +1,7 @@
-﻿using be.Services.SubjectService;
-using be.Services.TopicService;
-using Microsoft.AspNetCore.Http;
+﻿using be.Services.TopicService;
 using Microsoft.AspNetCore.Mvc;
 using be.DTOs;
+using be.Repositories.TopicRepository;
 
 namespace be.Controllers
 {
@@ -92,7 +91,7 @@ namespace be.Controllers
         }
 
         [HttpGet("getTopicById")]
-        public async Task<ActionResult> GetTopicById (int topicId)
+        public async Task<ActionResult> GetTopicById(int topicId)
         {
             try
             {
@@ -106,13 +105,14 @@ namespace be.Controllers
         }
 
         [HttpPost("editTopic")]
-        public async Task<ActionResult> EditTopic (EditTopic editTopic)
+        public async Task<ActionResult> EditTopic(EditTopic editTopic)
         {
             try
             {
                 var result = _topicService.UpdateTopic(editTopic);
                 return Ok(result);
-            } catch
+            }
+            catch
             {
                 return BadRequest();
             }
@@ -146,6 +146,7 @@ namespace be.Controllers
                 return BadRequest();
             }
         }
+
 
     }
 }
