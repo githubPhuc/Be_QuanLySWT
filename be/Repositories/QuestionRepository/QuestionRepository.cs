@@ -204,7 +204,7 @@ namespace be.Repositories.QuestionRepository
                 questionByTopicIdDTO.solution = question.Solution;
                 questionByTopicIdDTO.status = question.Status;
                 questionByTopicIdDTO.createDate = question.DateCreated;
-                questionByTopicIdDTO.statusString = question.Status == "0" ? "Chờ duyệt" : question.Status == "1" ? "Đã duyệt" : "Khóa";
+                questionByTopicIdDTO.statusString = question.Status == _defines.INACTIVE_STRING ? "Chờ duyệt" : question.Status == _defines.ACTIVE_STRING ? "Đã duyệt" : "Khóa";
                 result.Add(questionByTopicIdDTO);
             }
 
@@ -239,7 +239,7 @@ namespace be.Repositories.QuestionRepository
                               on question.LevelId equals level.LevelId
                               join topic in _context.Topics
                               on question.TopicId equals topic.TopicId
-                              where question.TopicId == topicId && question.Status == "1"
+                              where question.TopicId == topicId && question.Status == _defines.ACTIVE_STRING
                               select new
                               {
                                   topicId = topic.TopicId,

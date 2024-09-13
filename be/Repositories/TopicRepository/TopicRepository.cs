@@ -329,7 +329,7 @@ namespace be.Repositories.TopicRepository
                 var totalQuestion = (from topic in _context.Topics
                                      join question in _context.Questions
                                      on topic.TopicId equals question.TopicId
-                                     where topic.TopicId == item.TopicId && question.Status == "1"
+                                     where topic.TopicId == item.TopicId && question.Status == _Defines.ACTIVE_STRING
                                      select new
                                      {
                                          topic.TopicId
