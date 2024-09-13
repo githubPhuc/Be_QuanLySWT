@@ -1,5 +1,6 @@
 ﻿using be.DTOs;
 using be.Models;
+using System.Data.Entity;
 
 namespace be.Repositories.TestDetailRepository
 {
@@ -34,18 +35,34 @@ namespace be.Repositories.TestDetailRepository
         public object GetAllTestDetailByAccountID(int accountID)
         {
             var testHistory = new List<HistoryDTO>();
-            var testDetailByAccountId = _context.Testdetails.Where(x => x.AccountId == accountID && x.Submitted == true).ToList().OrderByDescending(x => x.TestDetailId);
+
+            var _Testdetails = _context.Testdetails.AsNoTracking();
+            var _Questiontests = _context.Questiontests.AsNoTracking();
+            var _Questions = _context.Questions.AsNoTracking();
+            var _Topics = _context.Topics.AsNoTracking();
+            var _Subjects = _context.Subjects.AsNoTracking();
+
+
+            
+
+
+            var testDetailByAccountId = _Testdetails.Where(x => x.AccountId == accountID && x.Submitted == true)
+                .ToList().OrderByDescending(x => x.TestDetailId);
+
             foreach (var testDetail in testDetailByAccountId)
             {
                 var historyDTO = new HistoryDTO();
                 historyDTO.TestDetailId = testDetail.TestDetailId;
                 historyDTO.Score = (float)testDetail.Score;
                 historyDTO.SubmitDate = (DateTime)testDetail.DateCreated;
-                var getQuestion = _context.Questiontests.Where(x => x.TestDetailId == testDetail.TestDetailId).FirstOrDefault();
-                var question = _context.Questions.SingleOrDefault(x => x.QuestionId == getQuestion.QuestionId);
-                var subject = _context.Subjects.SingleOrDefault(x => x.SubjectId == question.CourseChapterId);
+
+                var getQuestion = _Questiontests.
+                    Where(x => x.TestDetailId == testDetail.TestDetailId && x.Status == "topic").FirstOrDefault();
+
+                var question = _Questions.SingleOrDefault(x => x.QuestionId == getQuestion.QuestionId);
+                var topic = _Topics.SingleOrDefault(x => x.TopicId == question.TopicId);
+                var subject = _Subjects.SingleOrDefault(x => x.SubjectId == topic.SubjectId);
                 historyDTO.SubjectName = subject.SubjectName;// lỗi 
-                var topic = _context.Topics.SingleOrDefault(x => x.TopicId == question.TopicId);
                 historyDTO.Topic = topic.TopicName;
                 historyDTO.Duration = topic.Duration;
                 historyDTO.AnswerRight = (int)historyDTO.Score * topic.TotalQuestion / 10;

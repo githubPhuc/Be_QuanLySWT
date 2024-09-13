@@ -19,6 +19,10 @@ namespace be.Repositories.QuestionTestRepository
                 questiontest.QuestionId = questionId;
                 questiontest.TestDetailId = testDetailId;
                 questiontest.AnswerId = answerId;
+                questiontest.Status = "topic";
+                questiontest.DateCreated = DateTime.UtcNow.AddHours(7);
+                questiontest.DateUpdated = DateTime.UtcNow.AddHours(7);
+                questiontest.DateDelete = DateTime.UtcNow.AddHours(7);
                 _context.Add(questiontest);
                 _context.SaveChanges();
                 return new
