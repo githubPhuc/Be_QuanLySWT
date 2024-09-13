@@ -197,7 +197,7 @@ namespace be.Repositories.TestDetailRepository
         {
             try
             {
-                var dataUpdate = _context.Testdetails.SingleOrDefault(x => x.TestDetailId == testDetailId);
+                var dataUpdate = _context.Testdetails.SingleOrDefault(x => x.TestDetailId == testDetailId && x.Status =="topic");
                 var listQuestion = (from question in _context.Questions
                                     join questionTest in _context.Questiontests
                                     on question.QuestionId equals questionTest.QuestionId
@@ -281,14 +281,11 @@ namespace be.Repositories.TestDetailRepository
                                  })?.Count();
 
             var data = (from testDetail in _context.Testdetails
-                        join questionTest in _context.Questiontests
-                        on testDetail.TestDetailId equals questionTest.TestDetailId
-                        join question in _context.Questions
-                        on questionTest.QuestionId equals question.QuestionId
-                        join subject in _context.Subjects
-                        on question.CourseChapterId equals subject.SubjectId
-                        join topic in _context.Topics
-                        on question.TopicId equals topic.TopicId
+                        join questionTest in _context.Questiontests on testDetail.TestDetailId equals questionTest.TestDetailId
+                        join question in _context.Questions on questionTest.QuestionId equals question.QuestionId
+                        join topic in _context.Topics on question.TopicId equals topic.TopicId
+                        join subject in _context.Subjects  on topic.SubjectId equals subject.SubjectId
+                        
                         where testDetail.TestDetailId == testDetailId
                         select new
                         {
@@ -298,6 +295,7 @@ namespace be.Repositories.TestDetailRepository
                             topic.Duration,
                             answerRight = listRightAnswer,
                             totalQuestion = totalQuestion,
+                            graden = _context.Grades.Where(a=>a.GradeId==topic.Grade).FirstOrDefault(),
                             testDetail.Score,
                         }).Distinct().ToList();
             return new
