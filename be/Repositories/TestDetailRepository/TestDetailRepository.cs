@@ -1,6 +1,6 @@
 ﻿using be.DTOs;
 using be.Models;
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace be.Repositories.TestDetailRepository
 {
@@ -89,7 +89,7 @@ namespace be.Repositories.TestDetailRepository
             float totalScore = 0;
             foreach (var test in testHistory)
             {
-                totalScore += test.Score;
+                totalScore += (float)(test.Score??0);
             }
             var average = totalScore / testHistory.Count();
             float underStading = (average * 100) / 10;
@@ -102,69 +102,79 @@ namespace be.Repositories.TestDetailRepository
             };
         }
 
-        public object StatictisUnderstanding(int accountId, string subjectName)
+        public async Task<object> StatictisUnderstanding(int accountId, string subjectName)
         {
-            var testHistory = new List<HistoryDTO>();
-            var testDetailByAccountId = _context.Testdetails.Where(x => x.AccountId == accountId).ToList().OrderByDescending(x => x.TestDetailId);
-            foreach (var testDetail in testDetailByAccountId)
-            {
-                var historyDTO = new HistoryDTO();
-                historyDTO.TestDetailId = testDetail.TestDetailId;
-                historyDTO.Score = (float)testDetail.Score;
-                historyDTO.SubmitDate = (DateTime)testDetail.DateCreated;
-                var getQuestion = _context.Questiontests.Where(x => x.TestDetailId == testDetail.TestDetailId).FirstOrDefault();
-                var question = _context.Questions.SingleOrDefault(x => x.QuestionId == getQuestion.QuestionId);
-                var topic = _context.Topics.SingleOrDefault(x => x.TopicId == question.TopicId);
-                var subject = _context.Subjects.SingleOrDefault(x => x.SubjectId == topic.SubjectId);
-                historyDTO.SubjectName = subject.SubjectName;
-                historyDTO.Topic = topic.TopicName;
-                historyDTO.Duration = topic.Duration;
-                testHistory.Add(historyDTO);
-            }
+            //var testDetailByAccountId = _context.Testdetails.Where(x => x.AccountId == accountId).OrderByDescending(x => x.TestDetailId).ToList();
+            var _Questiontests = _context.Questiontests.AsNoTracking();
+            var _Testdetails = _context.Testdetails.AsNoTracking();
+            var _Questions = _context.Questions.AsNoTracking();
+            var _Topics = _context.Topics.AsNoTracking();
+            var _Subjects = _context.Subjects.AsNoTracking();
+
+            var dataTestHistory = await (from a in _Testdetails
+                        join b in _Questiontests on a.TestDetailId equals b.TestDetailId
+                        join c in _Questions on b.QuestionId equals c.QuestionId
+                        join d in _Topics on c.TopicId equals d.TopicId
+                        join e in _Subjects on d.SubjectId equals e.SubjectId
+                        where a.AccountId == accountId
+                        select new HistoryDTO()
+                        {
+
+                            SubjectName = e.SubjectName??"",
+                            Topic = d.TopicName ?? "",
+                            Duration = d.Duration ?? "",
+                        }).ToListAsync();
+
+
+            
             float totalScore;
             float average;
             float underStading;
             if (subjectName.Contains("Tất cả các môn"))
             {
                 totalScore = 0;
-                foreach (var test in testHistory)
+                foreach (var test in dataTestHistory)
                 {
-                    totalScore += test.Score;
+                    totalScore += (float)(test.Score ?? 0);
                 }
-                average = totalScore / testHistory.Count();
+                average = totalScore / dataTestHistory.Count();
                 underStading = (average * 100) / 10;
                 return new
                 {
                     message = "Get Data Successfully",
                     status = 200,
-                    data = testHistory,
+                    data = dataTestHistory,
                     levelOfUnderStanding = Math.Round(underStading, 2),
                 };
             }
-            var filterTest = testHistory.Where(x => x.SubjectName.Contains(subjectName));
-            if (filterTest.Count() == 0)
+            else
             {
+                var filterTest = dataTestHistory.Where(x => x.SubjectName.Contains(subjectName));
+                if (filterTest.Count() == 0)
+                {
+                    return new
+                    {
+                        message = "No Data to return",
+                        status = 400,
+                    };
+                }
+                totalScore = 0;
+                foreach (var test in filterTest)
+                {
+                    totalScore += (float)(test.Score ?? 0);
+                }
+                average = totalScore / filterTest.Count();
+                underStading = (average * 100) / 10;
                 return new
                 {
-                    message = "No Data to return",
-                    status = 400,
+                    message = "Get Data Successfully",
+                    status = 200,
+                    data = filterTest,
+                    subject = subjectName,
+                    levelOfUnderStanding = Math.Round(underStading, 2),
                 };
+
             }
-            totalScore = 0;
-            foreach (var test in filterTest)
-            {
-                totalScore += test.Score;
-            }
-            average = totalScore / filterTest.Count();
-            underStading = (average * 100) / 10;
-            return new
-            {
-                message = "Get Data Successfully",
-                status = 200,
-                data = filterTest,
-                subject = subjectName,
-                levelOfUnderStanding = Math.Round(underStading, 2),
-            };
         }
 
         public object AddTestDetail(int accountId)

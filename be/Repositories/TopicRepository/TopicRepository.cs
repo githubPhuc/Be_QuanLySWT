@@ -1,11 +1,8 @@
 ﻿using be.DTOs;
 using be.Models;
-using System.ComponentModel;
-using System.Data.Entity.Core.Mapping;
-using System.Diagnostics;
-using be.DTOs;
 using Microsoft.EntityFrameworkCore;
 using be.Helper;
+using be.Repositories.CouseCharter;
 
 namespace be.Repositories.TopicRepository
 {
@@ -22,7 +19,7 @@ namespace be.Repositories.TopicRepository
 
         public object ChangeStatusTopic(int topicId, string status)
         {
-            var topic = _context.Topics.SingleOrDefault(x => x.TopicId == topicId);
+            var topic = _context.Topics.SingleOrDefault(x => x.TopicId == topicId && x.IsDelete == false);
             if (topic == null)
             {
                 return new
@@ -49,6 +46,15 @@ namespace be.Repositories.TopicRepository
                 {
                     if (!string.IsNullOrEmpty(createTopic.TopicName))
                     {
+                        var data = _context.Topics.Where(a => a.TopicName.Equals(createTopic.TopicName)).FirstOrDefaultAsync();
+                        if(data != null)
+                        {
+                            return new
+                            {
+                                message = "Topic name already exists",
+                                status = 400,
+                            };
+                        }
                         var topic = new Topic();
                         topic.TopicName = createTopic.TopicName;
                         topic.Grade = createTopic.Grade;
@@ -59,10 +65,13 @@ namespace be.Repositories.TopicRepository
                         }
                         topic.TotalQuestion = 0;
                         topic.TopicType = createTopic.TopicType;
-                        topic.DateCreated = DateTime.Now;
                         topic.Status = "0";
                         topic.StartTestDate =  createTopic.StartTestDate;
                         topic.FinishTestDate = createTopic.FinishTestDate;
+                        topic.IsDelete = false;
+                        topic.DateCreated = DateTime.Now;
+                        topic.DateUpdated = DateTime.Now;
+                        topic.DateDelete = DateTime.Now;
                         _context.Topics.Add(topic);
                         _context.SaveChanges();
                         return new
@@ -104,7 +113,7 @@ namespace be.Repositories.TopicRepository
 
         public object EditTopic(EditTopic editTopic)
         {
-            var topic = _context.Topics.SingleOrDefault(x => x.TopicId == editTopic.TopicId);
+            var topic = _context.Topics.SingleOrDefault(x => x.TopicId == editTopic.TopicId && x.IsDelete == false);
             if(topic == null)
             {
                 return new
@@ -114,6 +123,7 @@ namespace be.Repositories.TopicRepository
                 };
             }
             topic.TopicName = editTopic.TopicName;
+            topic.DateUpdated = DateTime.Now;
             if(editTopic.TopicType == 5 || editTopic.TopicType == 6)
             {
                 topic.Grade = null;
@@ -162,7 +172,7 @@ namespace be.Repositories.TopicRepository
 
         public object GetAllTopcOfExam()
         {
-            var data = _context.Topics.Where(x => x.TopicType != 1);
+            var data = _context.Topics.Where(x => x.TopicType != 1&& x.IsDelete ==false);
             if(data == null)
             {
                 return new
@@ -181,12 +191,12 @@ namespace be.Repositories.TopicRepository
 
         public object GetAllTopic()
         {
-            var subjectList = _context.Subjects.ToList();
+            var subjectList = _context.Subjects.Where(a=>a.IsDelete == false).ToList();
             var GradesList = _context.Grades.ToList();
             
 
             List < TopicDTO > topicList = new List<TopicDTO>();
-            foreach (var item in _context.Topics)
+            foreach (var item in _context.Topics.Where(a=>a.IsDelete== false))
             {
                 TopicDTO topicDTO = new TopicDTO();
                 topicDTO.TopicId = item.TopicId;
@@ -308,7 +318,7 @@ namespace be.Repositories.TopicRepository
                                      join testDetail in _context.Testdetails on questionTest.TestDetailId equals testDetail.TestDetailId
                                      join account in _context.Accounts on testDetail.AccountId equals account.AccountId
                                      join subject in _context.Subjects on question.CourseChapterId equals subject.SubjectId
-                                     where account.AccountId == accountId && testDetail.Submitted == true
+                                     where account.AccountId == accountId && testDetail.Submitted == true && topic.IsDelete == false
                                      select new
                                      {
                                          topic.TopicId,
@@ -361,7 +371,7 @@ namespace be.Repositories.TopicRepository
         
         public object GetTopicById(int topicId)
         {
-            var result = from topic in _context.Topics where topic.TopicId == topicId
+            var result = from topic in _context.Topics where topic.TopicId == topicId && topic.IsDelete == false
                          select new
                          {
                              topicId = topic.TopicId,
@@ -396,7 +406,7 @@ namespace be.Repositories.TopicRepository
                         on testDetail.AccountId equals account.AccountId
                         join subject in _context.Subjects
                         on question.CourseChapterId equals subject.SubjectId
-                        where topic.TopicId == topicId && topic.TopicType == topicType
+                        where topic.TopicId == topicId && topic.TopicType == topicType && topic.IsDelete == false
                         select new
                         {
                             topic.TopicId,
@@ -419,7 +429,7 @@ namespace be.Repositories.TopicRepository
         public object GetTopicByTopicType(int topicType)
         {
             var data = (from topic in _context.Topics
-                        where topic.TopicType == topicType && topic.FinishTestDate >= DateTime.Now
+                        where topic.TopicType == topicType && topic.FinishTestDate >= DateTime.Now && topic.IsDelete == false
                         select new
                         {
                             topic.TopicId,
@@ -433,8 +443,45 @@ namespace be.Repositories.TopicRepository
             };
         }
 
+        public async Task<string> DeleteTopicId(int TopicId, int AccountId)
+        {
+            try
+            {
+                if (TopicId > 0)
+                {
+                    if (AccountId > 0)
+                    {
+                        var data =await _context.Topics.Where(a => a.TopicId == TopicId && a.IsDelete == false).FirstOrDefaultAsync();
+                        if(data != null)
+                        {
+                            data.IsDelete=true;
+                            _context.Topics.Update(data);
+                            await _context.SaveChangesAsync();
+                            return "Delete topic success";
+                        }
+                        else
+                        {
+                            throw new Exception("Data is not exits.");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Please select a Account Id.");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Please select a Id Topic.");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
 
 
-        
     }
 }

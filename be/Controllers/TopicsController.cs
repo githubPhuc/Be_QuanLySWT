@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using be.DTOs;
 using be.Repositories.TopicRepository;
+using be.Repositories.CouseCharter;
 
 namespace be.Controllers
 {
@@ -146,7 +147,24 @@ namespace be.Controllers
                 return BadRequest();
             }
         }
-
+        [HttpPost("DeleteTopicId")]
+        public async Task<ActionResult> DeleteTopicId(int TopicId, int AccountId)
+        {
+            ReponserApiService<string> responseAPI = new ReponserApiService<string>();
+            try
+            {
+                var data = await _topicService.DeleteTopicId(TopicId, AccountId);
+                responseAPI.Data = null;
+                responseAPI.Count = 1;
+                responseAPI.Message = data;
+                return Ok(responseAPI);
+            }
+            catch (Exception ex)
+            {
+                responseAPI.Message = ex.Message;
+                return BadRequest(responseAPI);
+            }
+        }
 
     }
 }

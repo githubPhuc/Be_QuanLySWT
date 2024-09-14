@@ -22,9 +22,9 @@ namespace be.Services.TestDetailService
             return _testDetailRepository.GetAllTestDetailByAccountID(accountID);
         }
 
-        public object StatictisUnderstanding(int accountId, string subjectName)
+        public async Task<object> StatictisUnderstanding(int accountId, string subjectName)
         {
-            return _testDetailRepository.StatictisUnderstanding(accountId, subjectName);
+            return await _testDetailRepository.StatictisUnderstanding(accountId, subjectName);
         }
         public object AddTestDetail(int accountId)
         {

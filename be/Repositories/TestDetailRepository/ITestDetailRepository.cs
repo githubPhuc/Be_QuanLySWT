@@ -6,8 +6,8 @@ namespace be.Repositories.TestDetailRepository
     {
         public object GetAllTestDetailByAccountID (int accountID);
         public object GetAllSubject();
-
-        public object StatictisUnderstanding(int accountId, string subjectName);
+        public Task<object> StatictisUnderstanding(int accountId, string subjectName);
+        //public object StatictisUnderstanding(int accountId, string subjectName);
         object AddTestDetail(int accountId);
         object UpdateTestDetail(int testDetailId);
         public object GetTestDetailByTestDetailId(int testDetailId);

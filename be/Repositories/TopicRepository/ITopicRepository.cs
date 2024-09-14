@@ -16,7 +16,10 @@ namespace be.Repositories.TopicRepository
         public object CreateTopic(CreateTopic createTopic);
         public object EditTopic(EditTopic editTopic);
 
-        public object GetTopicById (int topicId);   
+        public object GetTopicById (int topicId);
         #endregion
+
+
+        public Task<string> DeleteTopicId(int TopicId, int AccountId);
     }
 }

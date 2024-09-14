@@ -50,12 +50,12 @@ namespace be.Controllers
         {
             try
             {
-                var result = _testDetailService.StatictisUnderstanding(accountId, subjectName);
+                var result =await _testDetailService.StatictisUnderstanding(accountId, subjectName);
                 return Ok(result);
             }
-            catch
+            catch(Exception ex)
             {
-                return BadRequest();
+                return BadRequest(ex.Message);
             }
         }
     }
