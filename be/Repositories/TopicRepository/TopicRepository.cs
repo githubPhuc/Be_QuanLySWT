@@ -196,12 +196,10 @@ namespace be.Repositories.TopicRepository
             
 
             List < TopicDTO > topicList = new List<TopicDTO>();
-            foreach (var item in _context.Topics.Where(a=>a.IsDelete== false))
+            foreach (var item in _context.Topics.Where(a=>a.IsDelete== false).ToList())
             {
                 TopicDTO topicDTO = new TopicDTO();
                 topicDTO.TopicId = item.TopicId;
-                var subject = subjectList.SingleOrDefault(x => x.SubjectId == item.SubjectId);
-                topicDTO.SubjectId = subject.SubjectId;
                 if(item.Grade != null)
                 {
                     var graden = GradesList.Where(a => a.GradeId == item.Grade).FirstOrDefault();
@@ -213,7 +211,9 @@ namespace be.Repositories.TopicRepository
                     topicDTO.Grade = "";
                     topicDTO.GradeId = 0;
                 }
-                topicDTO.SubjectName = subject.SubjectName;
+                var subject = subjectList.FirstOrDefault(x => x.SubjectId == item.SubjectId);
+                topicDTO.SubjectId = subject?.SubjectId??0;
+                topicDTO.SubjectName = subject?.SubjectName ?? "";
                 topicDTO.TopicName = item.TopicName;
                 topicDTO.Duration = item.Duration;
                 topicDTO.TotalQuestion = item.TotalQuestion;

@@ -3,16 +3,19 @@ using Microsoft.Identity.Client;
 using System.Collections;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity;
+using be.Helper;
 
 namespace be.Repositories.SubjectRepository
 {
     public class SubjectRepository : ISubjectRepository
     {
         private readonly SwtDbContext _context;
+        private readonly Defines _Defines;
 
         public SubjectRepository()
         {
             _context = new SwtDbContext();
+            _Defines = new Defines();
         }
 
         public async Task<object> GetAllSubject()
@@ -51,6 +54,7 @@ namespace be.Repositories.SubjectRepository
                         join topic in _context.Topics
                         on question.TopicId equals topic.TopicId
                         where topic.TopicType == topicType && topic.FinishTestDate >= DateTime.Now
+                        where topic.Status == _Defines.ACTIVE_STRING
                         select new
                         {
                             topicType = topicType,

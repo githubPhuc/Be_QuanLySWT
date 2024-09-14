@@ -97,7 +97,9 @@ namespace be.Repositories.QuestionRepository
                 OptionD = questionDTO.OptionD,
                 Solution = questionDTO.Solution,
                 Status = _defines.ACTIVE_STRING,
-                DateCreated = DateTime.Now
+                DateCreated = DateTime.Now,
+                IsDelete = false,
+                DateDelete = DateTime.Now,
             };
 
             try
