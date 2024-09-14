@@ -41,6 +41,7 @@ namespace be.Repositories.TestDetailRepository
             var _Questions = _context.Questions.AsNoTracking();
             var _Topics = _context.Topics.AsNoTracking();
             var _Subjects = _context.Subjects.AsNoTracking();
+            var _Grades = _context.Grades.AsNoTracking();
 
 
             
@@ -63,6 +64,7 @@ namespace be.Repositories.TestDetailRepository
                 var subject = _Subjects.SingleOrDefault(x => x.SubjectId == topic.SubjectId);
                 historyDTO.SubjectName = subject.SubjectName;// lỗi 
                 historyDTO.Topic = topic.TopicName;
+                historyDTO.Grade = _Grades.Where(a=>a.GradeId == topic.Grade).FirstOrDefault();
                 historyDTO.Duration = topic.Duration;
                 historyDTO.AnswerRight = (int)historyDTO.Score * topic.TotalQuestion / 10;
                 var totalQuestion = (from testDTL in _context.Testdetails
