@@ -1,4 +1,5 @@
 ﻿using be.DTOs;
+using be.Helper;
 using be.Models;
 using be.Repositories.NewFolder;
 using Microsoft.Identity.Client;
@@ -10,10 +11,12 @@ namespace be.Repositories.SuperAdminRepository
     public class SuperAdminRepository : ISuperAdminRepository
     {
         private readonly SwtDbContext _context;
+        private readonly Defines _Defines;
 
         public SuperAdminRepository()
         {
             _context = new SwtDbContext();
+            _Defines = new Defines();
         }
         public object AddAdmin(SuperAdminDTO adminDTO)
         {
@@ -23,7 +26,7 @@ namespace be.Repositories.SuperAdminRepository
             addAdmin.Password = adminDTO.Password;
             addAdmin.FullName = adminDTO.FullName;
             addAdmin.CreateDate = DateTime.Now;
-            addAdmin.Status = "Đang hoạt động";
+            addAdmin.Status = _Defines.ACTIVE_STRING;
             addAdmin.RoleId = 2;
             _context.Accounts.Add(addAdmin);
             try

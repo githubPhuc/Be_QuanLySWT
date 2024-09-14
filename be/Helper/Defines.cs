@@ -10,6 +10,10 @@
         {
             get { return 10; }
         }
+        public string LOCK_STRING
+        {
+            get { return "LOCK"; }
+        }
         public string ACTIVE_STRING
         {
             get { return "ACTIVE"; }

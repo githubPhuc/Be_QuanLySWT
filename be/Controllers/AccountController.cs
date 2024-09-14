@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using be.DTOs;
 using be.Services.UserService;
 using be.Models;
+using be.Helper;
 
 namespace be.Controllers
 {
@@ -14,12 +15,14 @@ namespace be.Controllers
         private readonly IModService _modService;
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
+        private readonly Defines _Defines;
 
         public AccountController(IConfiguration configuration, IModService modService, IUserService userService)
         {
             _modService = modService;
             _configuration = configuration;
             _userService = userService;
+            _Defines = new Defines();
         }
 
         #region - Manage Mod
@@ -58,7 +61,7 @@ namespace be.Controllers
             {
                 var account = new Account();
                 account.Email = addAccount.Email;
-                account.Status = "Đang hoạt động";
+                account.Status = _Defines.ACTIVE_STRING;
                 account.Gender = addAccount.Gender;
                 account.FullName = addAccount.FullName;
                 account.BirthDay = addAccount.BirthDay;

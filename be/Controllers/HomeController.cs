@@ -1,4 +1,5 @@
 ﻿using be.DTOs;
+using be.Helper;
 using be.Models;
 using be.Models;
 using be.Services.UserService;
@@ -15,12 +16,14 @@ namespace be.Controllers
         private readonly IConfiguration _configuration;
 
         private readonly SwtDbContext _db;
+        private readonly Defines _Defines;
 
         public HomeController(SwtDbContext db, IUserService userService, IConfiguration configuration)
         {
             this._db = db;
             _userService = userService;
             _configuration = configuration;
+            _Defines = new Defines();
         }
 
         #region king- LOGIN/REGISTER/FORGOR PASSWORD/GETINFOR/CONFIRM ACCOUNT
@@ -69,7 +72,7 @@ namespace be.Controllers
                 {
                     return NotFound();
                 }
-                _user.Status = "Đang hoạt động";
+                _user.Status = _Defines.ACTIVE_STRING;
                 //_db.Entry(_db.Accounts.FirstOrDefaultAsync(x => x.Email == email)).CurrentValues.SetValues(_user);
                 _db.SaveChanges();
                 return Ok(new

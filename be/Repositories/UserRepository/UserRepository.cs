@@ -1,4 +1,5 @@
 ﻿using be.DTOs;
+using be.Helper;
 using be.Models;
 using be.Services.OtherService;
 using Microsoft.Identity.Client;
@@ -18,10 +19,12 @@ namespace be.Repositories.UserRepository
     public class UserRepository : IUserRepository
     {
         private readonly SwtDbContext _context;
+        private readonly Defines _Defines;
 
         public UserRepository()
         {
             _context = new SwtDbContext();
+            _Defines = new Defines();
         }
 
         #region king - LOGIN/REGISTER/FORGOR PASSWORD/GETINFO/ UPDATE USER/ CHANGE PASSWORD
@@ -100,7 +103,7 @@ namespace be.Repositories.UserRepository
                 newAccount.FullName = register.FullName;
                 newAccount.Email = register.Email;
                 newAccount.DateCreated = DateTime.Now;
-                newAccount.Status = "Đang hoạt động";
+                newAccount.Status = _Defines.ACTIVE_STRING;
                 newAccount.Avatar = register.Avatar;
                 newAccount.RoleId = 4;
                 newAccount.Password = GenerateRandomString();
@@ -153,7 +156,7 @@ namespace be.Repositories.UserRepository
                     status = 400
                 };
             }
-            if (user.Status.Equals("Chờ xác thực"))
+            if (user.Status.Equals(_Defines.INACTIVE_STRING))
             {
                 return new
                 {
@@ -161,7 +164,7 @@ namespace be.Repositories.UserRepository
                     status = 400
                 };
             }
-            if (user.Status.Equals("Đang khóa"))
+            if (user.Status.Equals(_Defines.LOCK_STRING))
             {
                 return new
                 {
@@ -170,7 +173,7 @@ namespace be.Repositories.UserRepository
                 };
             }
             token = CreateToken(user.Email, (int)user.RoleId, config);
-            if (user.Email == email && user.Password == password && user.Status.Equals("Đang hoạt động"))
+            if (user.Email == email && user.Password == password && user.Status.Equals(_Defines.ACTIVE_STRING))
             {
                 return new
                 {
@@ -192,16 +195,9 @@ namespace be.Repositories.UserRepository
             account.Phone = register.PhoneNumber;
             account.SchoolName = register.SchoolName;
             account.DateCreated = DateTime.Now;
-            //account.Status = "Chờ xác thực";
-            if (register.Status == null)
-            {
-                account.Status = "Chờ xác thực";
-            }
-            else
-            {
-                account.Status = register.Status;
-            }
-            if (register.Avatar != null)
+            account.CreateDate = DateTime.Now;
+            account.Status = _Defines.INACTIVE_STRING;
+            if (!string.IsNullOrEmpty(register.Avatar))
             {
                 account.Avatar = register.Avatar;
             }
@@ -209,7 +205,7 @@ namespace be.Repositories.UserRepository
             account.Password = GenerateRandomString();
             _context.Accounts.Add(account);
             _context.SaveChanges();
-            if (account.Status.Equals("Chờ xác thực"))
+            if (account.Status.Equals(_Defines.INACTIVE_STRING))
             {
                 try
                 {
