@@ -46,7 +46,7 @@ namespace be.Repositories.TopicRepository
                 {
                     if (!string.IsNullOrEmpty(createTopic.TopicName))
                     {
-                        var data = _context.Topics.Where(a => a.TopicName.Equals(createTopic.TopicName)).FirstOrDefaultAsync();
+                        var data = _context.Topics.FirstOrDefault(a => a.TopicName == createTopic.TopicName);
                         if(data != null)
                         {
                             return new

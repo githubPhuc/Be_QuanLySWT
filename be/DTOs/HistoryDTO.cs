@@ -9,6 +9,8 @@
         public float? Score { get; set; }
         public int? TotalQuestion { get; set; }
         public int? AnswerRight { get; set; }
+        //public int? Grade { get; set; }
+
         public DateTime SubmitDate { get; set; }    
     }
 }

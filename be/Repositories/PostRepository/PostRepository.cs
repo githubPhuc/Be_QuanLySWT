@@ -588,6 +588,7 @@ namespace be.Repositories.PostRepository
                     countComment = p.Post.Postcomments.Count(),
                     countLike = p.Post.Postlikes.Count()
                 });
+                Console.WriteLine(posts);
                 return posts;
             }
             catch (Exception ex)

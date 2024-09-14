@@ -48,14 +48,13 @@ namespace be.Repositories.TestDetailRepository
 
             var testDetailByAccountId = _Testdetails.Where(x => x.AccountId == accountID && x.Submitted == true)
                 .ToList().OrderByDescending(x => x.TestDetailId);
-
             foreach (var testDetail in testDetailByAccountId)
             {
                 var historyDTO = new HistoryDTO();
                 historyDTO.TestDetailId = testDetail.TestDetailId;
                 historyDTO.Score = (float)testDetail.Score;
                 historyDTO.SubmitDate = (DateTime)testDetail.DateCreated;
-
+               
                 var getQuestion = _Questiontests.
                     Where(x => x.TestDetailId == testDetail.TestDetailId && x.Status == "topic").FirstOrDefault();
 
@@ -207,7 +206,7 @@ namespace be.Repositories.TestDetailRepository
         {
             try
             {
-                var dataUpdate = _context.Testdetails.SingleOrDefault(x => x.TestDetailId == testDetailId && x.Status =="topic");
+                var dataUpdate = _context.Testdetails.SingleOrDefault(x => x.TestDetailId == testDetailId);
                 var listQuestion = (from question in _context.Questions
                                     join questionTest in _context.Questiontests
                                     on question.QuestionId equals questionTest.QuestionId
