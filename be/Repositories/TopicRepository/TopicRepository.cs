@@ -396,16 +396,11 @@ namespace be.Repositories.TopicRepository
         public async Task<object> GetRankingOfTopic(int topicId, int topicType)
         {
             var data = (from topic in _context.Topics
-                        join question in _context.Questions
-                        on topic.TopicId equals question.TopicId
-                        join questionTest in _context.Questiontests
-                        on question.QuestionId equals questionTest.QuestionId
-                        join testDetail in _context.Testdetails
-                        on questionTest.TestDetailId equals testDetail.TestDetailId
-                        join account in _context.Accounts
-                        on testDetail.AccountId equals account.AccountId
-                        join subject in _context.Subjects
-                        on question.CourseChapterId equals subject.SubjectId
+                        join question in _context.Questions on topic.TopicId equals question.TopicId
+                        join questionTest in _context.Questiontests  on question.QuestionId equals questionTest.QuestionId
+                        join testDetail in _context.Testdetails on questionTest.TestDetailId equals testDetail.TestDetailId
+                        join account in _context.Accounts on testDetail.AccountId equals account.AccountId
+                        join subject in _context.Subjects on topic.SubjectId equals subject.SubjectId
                         where topic.TopicId == topicId && topic.TopicType == topicType && topic.IsDelete == false
                         select new
                         {
