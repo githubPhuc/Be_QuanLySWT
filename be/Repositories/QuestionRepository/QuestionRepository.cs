@@ -33,11 +33,11 @@ namespace be.Repositories.QuestionRepository
 
         public object ApproveAllQuestionOfTopic(int topicId)
         {
-            var questionList = _context.Questions.Where(x => x.TopicId == topicId && x.Status == "0").ToList();
+            var questionList = _context.Questions.Where(x => x.TopicId == topicId && x.Status == _defines.INACTIVE_STRING).ToList();
 
             foreach (var question in questionList)
             {
-                question.Status = "1";
+                question.Status = _defines.ACTIVE_STRING;
             }
 
             try
@@ -96,7 +96,7 @@ namespace be.Repositories.QuestionRepository
                 OptionC = questionDTO.OptionC,
                 OptionD = questionDTO.OptionD,
                 Solution = questionDTO.Solution,
-                Status = "0",
+                Status = _defines.ACTIVE_STRING,
                 DateCreated = DateTime.Now
             };
 
@@ -150,6 +150,7 @@ namespace be.Repositories.QuestionRepository
                 question.OptionD = questionDTO.OptionD;
                 question.AnswerId = questionDTO.AnswerId;
                 question.Solution = questionDTO.Solution;
+                question.DateUpdated = DateTime.Now;
                 _context.SaveChanges();
 
                 return new
@@ -177,11 +178,11 @@ namespace be.Repositories.QuestionRepository
             var result = new List<QuestionByTopicIdDTO>();
             foreach(var question in query.ToList())
             {
+                var topic = _context.Topics.SingleOrDefault(x => x.TopicId == question.TopicId);    
                 QuestionByTopicIdDTO questionByTopicIdDTO = new QuestionByTopicIdDTO();
                 var accountId = _context.Accounts.SingleOrDefault(x => x.AccountId == question.AccountId);  
                 var answer = _context.Answers.SingleOrDefault(x => x.AnswerId == question.AnswerId);
                 var level = _context.Levels.SingleOrDefault(x => x.LevelId == question.LevelId);
-                var topic = _context.Topics.SingleOrDefault(x => x.TopicId == question.TopicId);    
                 var subject = _context.Subjects.SingleOrDefault(x => x.SubjectId == topic.SubjectId);    
                 
                 questionByTopicIdDTO.questionId = question.QuestionId;
@@ -240,6 +241,7 @@ namespace be.Repositories.QuestionRepository
                               join topic in _context.Topics
                               on question.TopicId equals topic.TopicId
                               where question.TopicId == topicId && question.Status == _defines.ACTIVE_STRING
+                              where topic.IsDelete == false
                               select new
                               {
                                   topicId = topic.TopicId,
