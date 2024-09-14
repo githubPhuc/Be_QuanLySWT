@@ -185,6 +185,7 @@ namespace be.Repositories.TestDetailRepository
                 testdetail.AccountId = accountId;
                 testdetail.Score = 0;
                 testdetail.Submitted = false;
+                testdetail.Status = "topic";
                 testdetail.DateCreated = DateTime.Now;
                 _context.Add(testdetail);
                 _context.SaveChanges();
