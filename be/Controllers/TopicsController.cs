@@ -165,6 +165,24 @@ namespace be.Controllers
                 return BadRequest(responseAPI);
             }
         }
+        [HttpPost("ComfirmInTopicId")]
+        public async Task<ActionResult> ComfirmInTopicId(int TopicId, int AccountId)
+        {
+            ReponserApiService<string> responseAPI = new ReponserApiService<string>();
+            try
+            {
+                var data = await _topicService.ComfirmInTopicId(TopicId, AccountId);
+                responseAPI.Data = null;
+                responseAPI.Count = 1;
+                responseAPI.Message = data;
+                return Ok(responseAPI);
+            }
+            catch (Exception ex)
+            {
+                responseAPI.Message = ex.Message;
+                return BadRequest(responseAPI);
+            }
+        }
 
     }
 }

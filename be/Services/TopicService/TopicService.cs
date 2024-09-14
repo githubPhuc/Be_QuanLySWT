@@ -1,6 +1,8 @@
 ﻿using be.Repositories.ModRepository;
 using be.Repositories.TopicRepository;
 using be.DTOs;
+using Microsoft.Identity.Client;
+using be.Models;
 
 namespace be.Services.TopicService
 {
@@ -10,6 +12,10 @@ namespace be.Services.TopicService
         public TopicService()
         {
             _topicRepository = new TopicRepository();
+        }
+        public async Task<string> ComfirmInTopicId(int TopicId, int AccountId)
+        {
+            return await _topicRepository.ComfirmInTopicId(TopicId, AccountId); 
         }
         public async Task<string> DeleteTopicId(int TopicId, int AccountId)
         {

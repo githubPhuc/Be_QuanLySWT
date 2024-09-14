@@ -21,5 +21,6 @@ namespace be.Repositories.TopicRepository
 
 
         public Task<string> DeleteTopicId(int TopicId, int AccountId);
+        public Task<string> ComfirmInTopicId(int TopicId, int AccountId);
     }
 }

@@ -65,7 +65,7 @@ namespace be.Repositories.TopicRepository
                         }
                         topic.TotalQuestion = 0;
                         topic.TopicType = createTopic.TopicType;
-                        topic.Status = "0";
+                        topic.Status = _Defines.INACTIVE_STRING;
                         topic.StartTestDate =  createTopic.StartTestDate;
                         topic.FinishTestDate = createTopic.FinishTestDate;
                         topic.IsDelete = false;
@@ -243,11 +243,11 @@ namespace be.Repositories.TopicRepository
                     topicDTO.TopicTypeName = "Cuộc thi chung";
                 }
                 topicDTO.CreateDate = item.DateCreated;
-                if (item.Status == "0")
+                if (item.Status == _Defines.INACTIVE_STRING)
                 {
                     topicDTO.Status = "Chờ duyệt";
                 }
-                else if (item.Status == "1")
+                else if (item.Status == _Defines.ACTIVE_STRING)
                 {
                     topicDTO.Status = "Đã duyệt";
                 } else
@@ -458,6 +458,54 @@ namespace be.Repositories.TopicRepository
                             _context.Topics.Update(data);
                             await _context.SaveChangesAsync();
                             return "Delete topic success";
+                        }
+                        else
+                        {
+                            throw new Exception("Data is not exits.");
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Please select a Account Id.");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Please select a Id Topic.");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
+        public async Task<string> ComfirmInTopicId(int TopicId, int AccountId)
+        {
+            try
+            {
+                if (TopicId > 0)
+                {
+                    if (AccountId > 0)
+                    {
+                        var data = await _context.Topics.Where(a => a.TopicId == TopicId && a.IsDelete == false).FirstOrDefaultAsync();
+                        if (data != null)
+                        {
+                            if(data.Status == _Defines.ACTIVE_STRING)
+                            {
+                                data.Status = _Defines.INACTIVE_STRING;
+                                _context.Topics.Update(data);
+                                await _context.SaveChangesAsync();
+                                 return "Comfirm INACTIVE topic success";
+                            }
+                            else
+                            {
+                                data.Status = _Defines.ACTIVE_STRING;
+                                _context.Topics.Update(data);
+                                 await _context.SaveChangesAsync();
+                                 return "Comfirm ACTIVE topic success";
+                            }
                         }
                         else
                         {
