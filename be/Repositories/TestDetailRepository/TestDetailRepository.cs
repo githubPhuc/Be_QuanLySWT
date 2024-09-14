@@ -114,9 +114,9 @@ namespace be.Repositories.TestDetailRepository
                 historyDTO.SubmitDate = (DateTime)testDetail.DateCreated;
                 var getQuestion = _context.Questiontests.Where(x => x.TestDetailId == testDetail.TestDetailId).FirstOrDefault();
                 var question = _context.Questions.SingleOrDefault(x => x.QuestionId == getQuestion.QuestionId);
-                var subject = _context.Subjects.SingleOrDefault(x => x.SubjectId == question.CourseChapterId);
-                historyDTO.SubjectName = subject.SubjectName;
                 var topic = _context.Topics.SingleOrDefault(x => x.TopicId == question.TopicId);
+                var subject = _context.Subjects.SingleOrDefault(x => x.SubjectId == topic.SubjectId);
+                historyDTO.SubjectName = subject.SubjectName;
                 historyDTO.Topic = topic.TopicName;
                 historyDTO.Duration = topic.Duration;
                 testHistory.Add(historyDTO);

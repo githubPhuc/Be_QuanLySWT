@@ -138,23 +138,35 @@ namespace be.Repositories.NewsRepository
             try
             {
                 var firstNews = _context.News.Where(n=>n.Status=="1").OrderByDescending(x => x.NewId).FirstOrDefault();
-                var firstNewsDTO = new FirstNews();
-                firstNewsDTO.NewsId = firstNews.NewId;
-                Newcategory category1 = _context.Newcategorys.SingleOrDefault(x => x.NewCategoryId == firstNews.NewCategoryId);
-                firstNewsDTO.CategoryName = category1.CategoryName;
-                firstNewsDTO.Title = firstNews.Title;
-                firstNewsDTO.Image = firstNews.Image;
-                firstNewsDTO.CreatedDay = firstNews.DateCreated?.ToString("dd/MM/yyyy");
-                var dailyNews = DailyNews();
-                var otherNews = OtherNews();
-                return new
+                if(firstNews!=null)
                 {
-                    message = "Get data successfully",
-                    status = 200,
-                    firstNew = firstNewsDTO,
-                    dailyNew = dailyNews,
-                    otherNew = otherNews,
-                };
+                    var firstNewsDTO = new FirstNews();
+                    firstNewsDTO.NewsId = firstNews.NewId;
+                    Newcategory category1 = _context.Newcategorys.SingleOrDefault(x => x.NewCategoryId == firstNews.NewCategoryId);
+                    firstNewsDTO.CategoryName = category1.CategoryName;
+                    firstNewsDTO.Title = firstNews.Title;
+                    firstNewsDTO.Image = firstNews.Image;
+                    firstNewsDTO.CreatedDay = firstNews.DateCreated?.ToString("dd/MM/yyyy");
+                    var dailyNews = DailyNews();
+                    var otherNews = OtherNews();
+                    return new
+                    {
+                        message = "Get data successfully",
+                        status = 200,
+                        firstNew = firstNewsDTO,
+                        dailyNew = dailyNews,
+                        otherNew = otherNews,
+                    };
+
+                }
+                else
+                {
+                    return new
+                    {
+                        message = "Get data failed",
+                        status = 400,
+                    };
+                }
             }
             catch
             {

@@ -178,11 +178,11 @@ namespace be.Repositories.QuestionRepository
             foreach(var question in query.ToList())
             {
                 QuestionByTopicIdDTO questionByTopicIdDTO = new QuestionByTopicIdDTO();
-                var subject = _context.Subjects.SingleOrDefault(x => x.SubjectId == question.CourseChapterId);    
                 var accountId = _context.Accounts.SingleOrDefault(x => x.AccountId == question.AccountId);  
                 var answer = _context.Answers.SingleOrDefault(x => x.AnswerId == question.AnswerId);
                 var level = _context.Levels.SingleOrDefault(x => x.LevelId == question.LevelId);
                 var topic = _context.Topics.SingleOrDefault(x => x.TopicId == question.TopicId);    
+                var subject = _context.Subjects.SingleOrDefault(x => x.SubjectId == topic.SubjectId);    
                 
                 questionByTopicIdDTO.questionId = question.QuestionId;
                 questionByTopicIdDTO.subjectId = subject.SubjectId;

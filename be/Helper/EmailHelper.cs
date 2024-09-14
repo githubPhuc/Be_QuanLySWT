@@ -8,7 +8,7 @@
             get { if (instance == null) instance = new EmailHelper(); return EmailHelper.instance; }
             private set { EmailHelper.instance = value; }
         }
-
+        //sai 
         public string BodyRegisterMail(string fullname, string? email, string password)
         {
             return $@"
