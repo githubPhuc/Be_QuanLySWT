@@ -306,7 +306,7 @@ namespace be.Repositories.TestDetailRepository
                             answerRight = listRightAnswer,
                             totalQuestion = totalQuestion,
                             graden = _context.Grades.Where(a=>a.GradeId==topic.Grade).FirstOrDefault(),
-                            testDetail.Score,
+                            Score = (totalQuestion /10.0)* listRightAnswer,
                         }).Distinct().ToList();
             return new
             {
