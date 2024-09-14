@@ -1,16 +1,21 @@
 ﻿using be.DTOs;
+using be.Helper;
 using be.Models;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace be.Repositories.TestDetailRepository
 {
     public class TestDetailRepository : ITestDetailRepository
     {
         private readonly SwtDbContext _context;
+        private readonly Defines _Defines;
 
         public TestDetailRepository()
         {
             _context = new SwtDbContext();
+            _Defines = new Defines();
         }
 
         public object GetAllSubject()
@@ -178,6 +183,32 @@ namespace be.Repositories.TestDetailRepository
             }
         }
 
+
+
+
+        public async Task<List<GetHistoryModelView>> GetHistoryByAccount(int accountId, string? subjectName)
+        {
+            List<GetHistoryModelView> list = new List<GetHistoryModelView>();
+            if (accountId > 0)
+            {
+                try
+                {
+                    SqlParameter[] parameters =
+                    {
+                        new SqlParameter("@AccountId",accountId),
+                        new SqlParameter("@SubjectName",subjectName),
+                    };
+
+                    DataTable dt = SQLHelper.Fill(_Defines.CONNETION_STRING, "GetHistoryByAccountId", parameters);
+                    list = SQLHelper.ToList<GetHistoryModelView>(dt);
+                }
+                catch (Exception e)
+                {
+                    string mes = e.Message;
+                }
+            }
+            return list;
+        }
         public object AddTestDetail(int accountId)
         {
             try

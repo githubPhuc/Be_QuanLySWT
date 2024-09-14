@@ -90,5 +90,23 @@ namespace be.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("GetHistoryByAccount")]
+        public async Task<ActionResult> GetHistoryByAccount(int accountId, string? subjectName)
+        {
+            ReponserApiService<string> responseAPI = new ReponserApiService<string>();
+            try
+            {
+                var data = await _testDetailService.GetHistoryByAccount(accountId,subjectName);
+                responseAPI.Data = data;
+                responseAPI.Count = data.Count();
+                responseAPI.Message = "0.5";
+                return Ok(responseAPI);
+            }
+            catch (Exception ex)
+            {
+                responseAPI.Message = ex.Message;
+                return BadRequest(responseAPI);
+            }
+        }
     }
 }

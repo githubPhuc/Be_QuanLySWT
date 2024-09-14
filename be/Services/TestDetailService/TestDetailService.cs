@@ -16,6 +16,10 @@ namespace be.Services.TestDetailService
         {
             return _testDetailRepository.GetAllSubject();
         }
+        public async Task<List<GetHistoryModelView>> GetHistoryByAccount(int accountId, string? subjectName)
+        {
+            return await _testDetailRepository.GetHistoryByAccount(accountId,subjectName);
+        }
 
         public object GetAllTestDetailByAccountID(int accountID)
         {
