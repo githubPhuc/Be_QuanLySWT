@@ -637,9 +637,9 @@ namespace be.Repositories.ModRepository
                                 data.DateUpdated = DateTime.UtcNow.AddHours(7);
                                 data.UserUpdated = model.AccountId;
                                 _context.Questions.Update(data);
-                                await _context.SaveChangesAsync();
                             }
                         }
+                        await _context.SaveChangesAsync();
                         return "Add question success";
                     }
                     else
