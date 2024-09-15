@@ -315,7 +315,7 @@ namespace be.Repositories.PostRepository
                                             select acc.FullName).FirstOrDefault() ?? "",
                                 b.PostText,
                                 b.PostFile,
-                                b.Status,
+                                a.Status,
                                 b.DateCreated,
                                 b.Postlikes,
                                 b.Postfavourites,
@@ -327,11 +327,12 @@ namespace be.Repositories.PostRepository
             }
             else
             {
-                var posts = (from b in _Posts
-                             where b.SubjectId == subjectId && b.Status == status && b.AccountId == accountId
+                var posts = (from a in _Postfavourites
+                             join b in _Posts on a.PostId equals b.PostId
+                             where a.AccountId == accountId && b.Status == status  && b.SubjectId == subjectId
                              select new
                              {
-                                 b.PostId,
+                                 a.PostId,
                                  SubjectId = b.SubjectId,
                                  SubjectName = (from s in _Subjects
                                                 where s.SubjectId == b.SubjectId
