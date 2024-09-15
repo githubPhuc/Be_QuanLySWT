@@ -299,7 +299,7 @@ namespace be.Repositories.PostRepository
             {
                 var data = (from a in _Postfavourites
                             join b in _Posts on a.PostId equals b.PostId
-                            where b.SubjectId == subjectId && b.Status == "Approved" && a.Status == status
+                            where b.SubjectId == subjectId && b.Status == status
                             select new
                             {
                                 a.PostId,
@@ -330,7 +330,7 @@ namespace be.Repositories.PostRepository
             {
                 var posts = (from a in _Postfavourites
                              join b in _Posts on a.PostId equals b.PostId
-                             where a.AccountId == accountId && a.Status == status && b.Status == "Approved" && b.SubjectId == subjectId
+                             where a.AccountId == accountId && b.Status == status  && b.SubjectId == subjectId
                              select new
                              {
                                  a.PostId,
