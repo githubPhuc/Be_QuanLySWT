@@ -413,6 +413,7 @@ namespace be.Repositories.ModRepository
                         CourseChapterId = _Coursechapters.ChapterId,
                         UserCreated = model.AccountId,
                         UserUpdated = model.AccountId,
+                        AccountId = model.AccountId,
                         UserDelete = model.AccountId,
                         QuestionContext = model.QuestionContext,
                         AnswerId = model.AnswerId,

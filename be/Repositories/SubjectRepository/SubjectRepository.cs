@@ -3,16 +3,19 @@ using Microsoft.Identity.Client;
 using System.Collections;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity;
+using be.Helper;
 
 namespace be.Repositories.SubjectRepository
 {
     public class SubjectRepository : ISubjectRepository
     {
         private readonly SwtDbContext _context;
+        private readonly Defines _Defines;
 
         public SubjectRepository()
         {
             _context = new SwtDbContext();
+            _Defines = new Defines();
         }
 
         public async Task<object> GetAllSubject()
@@ -45,19 +48,22 @@ namespace be.Repositories.SubjectRepository
             {
                 check = false;
             }
-            var data = (from subject in _context.Subjects
-                        join question in _context.Questions
-                        on subject.SubjectId equals question.CourseChapterId
-                        join topic in _context.Topics
-                        on question.TopicId equals topic.TopicId
-                        where topic.TopicType == topicType && topic.FinishTestDate >= DateTime.Now
+
+            var data = (from a in _context.Topics
+                          join b in _context.Subjects on a.SubjectId equals b.SubjectId
+                          join c in _context.Questions on a.TopicId equals c.TopicId
+                          where a.TopicType == topicType && a.FinishTestDate >= DateTime.Now
+                        where a.Status == _Defines.ACTIVE_STRING
                         select new
-                        {
-                            topicType = topicType,
-                            subject.SubjectId,
-                            subject.SubjectName,
-                            subject.ImgLink,
-                        }).Distinct().ToList();
+                          {
+                              topicType = topicType,
+                              SubjectId= b.SubjectId,
+                              SubjectName=b.SubjectName,
+                              ImgLink= b.ImgLink,
+                          }).Distinct().ToList();
+
+                          
+            
             return new
             {
                 status = 200,
