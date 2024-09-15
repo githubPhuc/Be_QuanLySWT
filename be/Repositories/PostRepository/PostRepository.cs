@@ -149,7 +149,7 @@ namespace be.Repositories.PostRepository
             {
                 var data = (from a in _Postfavourites
                             join b in _Posts on a.PostId equals b.PostId
-                            where b.Status == "Approved" && a.Status == status
+                            where b.Status == status 
                             select new
                             {
                                 a.PostId,
@@ -179,7 +179,7 @@ namespace be.Repositories.PostRepository
             {
                 var data = (from a in _Postfavourites
                             join b in _Posts on a.PostId equals b.PostId
-                            where a.AccountId == accountId && b.Status == "Approved" && a.Status == status
+                            where a.AccountId == accountId && b.Status == status
                             select new
                             {
                                 a.PostId,
@@ -208,6 +208,7 @@ namespace be.Repositories.PostRepository
         }
         public dynamic GetPostBySubject(int subjectId, int accountId)
         {
+
             var checkAccount = _context.Accounts.SingleOrDefault(a => a.AccountId == accountId);
             if (checkAccount.RoleId == 1 || checkAccount.RoleId == 2)
             {
