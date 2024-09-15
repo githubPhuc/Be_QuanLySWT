@@ -297,12 +297,11 @@ namespace be.Repositories.PostRepository
             var checkAccount = _context.Accounts.SingleOrDefault(a => a.AccountId == accountId);
             if (checkAccount.RoleId == 1 || checkAccount.RoleId == 2)
             {
-                var data = (from a in _Postfavourites
-                            join b in _Posts on a.PostId equals b.PostId
+                var data = (from  b in _Posts 
                             where b.SubjectId == subjectId && b.Status == status
                             select new
                             {
-                                a.PostId,
+                                b.PostId,
                                 SubjectId = b.SubjectId,
                                 SubjectName = (from s in _Subjects
                                                where s.SubjectId == b.SubjectId
@@ -316,7 +315,7 @@ namespace be.Repositories.PostRepository
                                             select acc.FullName).FirstOrDefault() ?? "",
                                 b.PostText,
                                 b.PostFile,
-                                a.Status,
+                                b.Status,
                                 b.DateCreated,
                                 b.Postlikes,
                                 b.Postfavourites,
@@ -328,12 +327,11 @@ namespace be.Repositories.PostRepository
             }
             else
             {
-                var posts = (from a in _Postfavourites
-                             join b in _Posts on a.PostId equals b.PostId
-                             where a.AccountId == accountId && b.Status == status  && b.SubjectId == subjectId
+                var posts = (from b in _Posts
+                             where b.SubjectId == subjectId && b.Status == status && b.AccountId == accountId
                              select new
                              {
-                                 a.PostId,
+                                 b.PostId,
                                  SubjectId = b.SubjectId,
                                  SubjectName = (from s in _Subjects
                                                 where s.SubjectId == b.SubjectId
