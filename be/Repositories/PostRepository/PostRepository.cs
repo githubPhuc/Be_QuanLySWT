@@ -315,7 +315,7 @@ namespace be.Repositories.PostRepository
                                             select acc.FullName).FirstOrDefault() ?? "",
                                 b.PostText,
                                 b.PostFile,
-                                a.Status,
+                                b.Status,
                                 b.DateCreated,
                                 b.Postlikes,
                                 b.Postfavourites,
