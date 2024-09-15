@@ -37,6 +37,30 @@ namespace be.Controllers
                 return BadRequest(responseAPI);
             }
         }
+
+        /// <summary>
+        /// Admin load chương theo id môn học 
+        /// </summary>
+        /// <param name="SubjecId"></param>
+        /// <returns></returns>
+        [HttpGet("GetAllListCouseCharterBySubjectId")]
+        public async Task<ActionResult> GetAllListCouseCharterBySubjectId(int SubjecId)
+        {
+            ReponserApiService<string> responseAPI = new ReponserApiService<string>();
+            try
+            {
+                var data = await _contextICouseCharterRepository.GetAllListCouseCharterBySubjectId(SubjecId);
+                responseAPI.Data = data;
+                responseAPI.Count = data.Count();
+                responseAPI.Message = "Load thành công!!";
+                return Ok(responseAPI);
+            }
+            catch (Exception ex)
+            {
+                responseAPI.Message = ex.Message;
+                return BadRequest(responseAPI);
+            }
+        }
         /// <summary>
         /// Load tất cả câu hỏi theo chương quyền admin
         /// </summary>
@@ -127,6 +151,12 @@ namespace be.Controllers
                 return BadRequest(responseAPI);
             }
         }
+        /// <summary>
+        /// Admin update chương 
+        /// </summary>
+        /// <param name="IdCourceChapter"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("UpdateCourceCharter")]
         public async Task<ActionResult> UpdateCourceCharter(int IdCourceChapter, PostDataInsertCourseChapter model)
         {
@@ -145,6 +175,12 @@ namespace be.Controllers
                 return BadRequest(responseAPI);
             }
         }
+        /// <summary>
+        /// Admin xóa chương 
+        /// </summary>
+        /// <param name="IdCourceChapter"></param>
+        /// <param name="AccountId"></param>
+        /// <returns></returns>
         [HttpPost("DeleteCourceCharter")]
         public async Task<ActionResult> DeleteCourceCharter(int IdCourceChapter, int AccountId)
         {

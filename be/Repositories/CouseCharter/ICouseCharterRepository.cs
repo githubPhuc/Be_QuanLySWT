@@ -9,6 +9,7 @@ namespace be.Repositories.ModRepository
     public interface ICouseCharterRepository
     {
         public Task<List<getCouseCharter>> GetAllListCouseCharter(string? ChapterTitleSearch);
+        public Task<List<getCouseCharter>> GetAllListCouseCharterBySubjectId(int SubjecId);
         public Task<List<getQuestionInCourseChapter>> GetAllListQuestionInCouseCharter(int IdCouseChapter, string? nameQuestion);
         public Task<List<getCouseCharter>> GetCouseCharterByGrade(int GradeId, int SubjectId, string? ChapterSearch);
         public Task<List<getQuestionInCourseChapter>> GetQuestionByCourseChaptersInUser(int IdCourseChapter);

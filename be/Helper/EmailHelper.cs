@@ -124,8 +124,8 @@
                                                 Tài khoản: <strong>{email}</strong><br />
                                                 Mật khẩu: <strong>{password}</strong><br />
                                                 Không chia sẻ mật khẩu với bất kỳ ai. Vui lòng đổi mật khẩu sau khi nhận được email này. <br /><br />
-                                                Kích hoạt tài khoản: <a href=https://localhost:7207/api/home/confirm?email={email} target=""_blank""
-                                                    style=""display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px;text-decoration: none; border-radius: 6px;"">Nhấn vào đây</a><br/>
+
+                                                Kích hoạt tài khoản: <button onclick=""confirmEmail({email})"" style=""padding: 10px 20px; font-size: 16px; cursor: pointer;"">Nhấn tại đây</button><br/>
                                                 Chúc bạn có trải nghiệm tốt.
                                             </td>
                                         </tr>
@@ -156,6 +156,35 @@
                                 </td>
                             </tr>
                         </table>
+                        <script>
+                            function confirmEmail(email) {{
+                                const urlParams = new URLSearchParams(window.location.search);
+                                const apiUrl = `https://localhost:7207/api/home/confirm?email=${{email}}`;
+
+                                fetch(apiUrl)
+                                    .then(response => response.json())
+                                    .then(data => {{
+                                        if (data.status === 200) {{
+                                            const userConfirmed = confirm(""Xác nhận thành công! Bạn có muốn chuyển đến trang đăng nhập?"");
+                                            if (userConfirmed) {{
+                                                // Nếu người dùng nhấn OK, chuyển hướng đến trang đăng nhập
+                                                window.location.href = ""https://localhost:3000/home/login"";
+                                            }} else {{
+                                                alert(""Bạn có thể quay lại email của bạn."");
+                                                // Hoặc bạn có thể cung cấp một liên kết trở về trang email, ví dụ:
+                                                // window.location.href = ""LINK_TO_YOUR_EMAIL_PAGE"";
+                                            }}
+                                        }} else {{
+                                            // Hiển thị thông báo lỗi
+                                            alert(""Có lỗi xảy ra, xin vui lòng thử lại."");
+                                        }}
+                                    }})
+                                    .catch(error => {{
+                                        console.error('Có lỗi trong quá trình xác nhận:', error);
+                                        alert(""Có lỗi xảy ra, xin vui lòng thử lại."");
+                                    }});
+                            }}
+                        </script>
                     </body>
                     </html>";
         }
