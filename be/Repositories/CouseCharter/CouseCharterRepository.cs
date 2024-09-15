@@ -61,7 +61,7 @@ namespace be.Repositories.ModRepository
                 throw new Exception("Error: " + ex.Message);
             }
         }
-        public async Task<List<getCouseCharter>> GetAllListCouseCharterBySubjectId(int SubjecId)
+        public async Task<List<getCouseCharter>> GetAllListCouseCharterBySubjectId(int SubjecId, int? GradeId)
         {
             try
             {
@@ -87,6 +87,7 @@ namespace be.Repositories.ModRepository
                                         MainContent = a.MainContent,
                                         SubjecId = a.SubjecId,
                                     }).OrderByDescending(a => a.SubjecId).ThenByDescending(a => a.DateCreated).ToListAsync();
+                result = result.Where(a => (a.Grade != null && a.Grade.GradeId == GradeId)||GradeId==null).ToList();
                 return result;
 
             }

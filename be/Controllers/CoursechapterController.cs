@@ -44,12 +44,12 @@ namespace be.Controllers
         /// <param name="SubjecId"></param>
         /// <returns></returns>
         [HttpGet("GetAllListCouseCharterBySubjectId")]
-        public async Task<ActionResult> GetAllListCouseCharterBySubjectId(int SubjecId)
+        public async Task<ActionResult> GetAllListCouseCharterBySubjectId(int SubjecId, int? GradeId)
         {
             ReponserApiService<string> responseAPI = new ReponserApiService<string>();
             try
             {
-                var data = await _contextICouseCharterRepository.GetAllListCouseCharterBySubjectId(SubjecId);
+                var data = await _contextICouseCharterRepository.GetAllListCouseCharterBySubjectId(SubjecId, GradeId);
                 responseAPI.Data = data;
                 responseAPI.Count = data.Count();
                 responseAPI.Message = "Load thành công!!";
