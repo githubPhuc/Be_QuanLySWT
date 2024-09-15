@@ -13,6 +13,10 @@ namespace be.Services.TopicService
         {
             _topicRepository = new TopicRepository();
         }
+        public async Task<string> DeleteQuestionInQuestionFromTopic(int QuestionId)
+        {
+            return await _topicRepository.DeleteQuestionInQuestionFromTopic(QuestionId); 
+        }
         public async Task<string> ComfirmInTopicId(int TopicId, int AccountId)
         {
             return await _topicRepository.ComfirmInTopicId(TopicId, AccountId); 

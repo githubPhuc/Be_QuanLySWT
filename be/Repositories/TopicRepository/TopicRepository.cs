@@ -46,7 +46,7 @@ namespace be.Repositories.TopicRepository
                 {
                     if (!string.IsNullOrEmpty(createTopic.TopicName))
                     {
-                        var data = _context.Topics.FirstOrDefault(a => a.TopicName == createTopic.TopicName);
+                        var data = _context.Topics.FirstOrDefault(a => a.TopicName == createTopic.TopicName &&a.Grade == createTopic.Grade);
                         if(data != null)
                         {
                             return new
@@ -516,6 +516,46 @@ namespace be.Repositories.TopicRepository
                 {
                     throw new Exception("Please select a Id Topic.");
                 }
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+        }
+        public async Task<string> DeleteQuestionInQuestionFromTopic(int QuestionId)
+        {
+            try
+            {
+                if (QuestionId > 0)
+                {
+                    var data = await _context.Questions.Where(a => a.QuestionId == QuestionId).FirstOrDefaultAsync();
+                    if (data != null)
+                    {
+                        if (data.CourseChapterId == null)
+                        {
+                            _context.Questions.Remove(data);
+                            await _context.SaveChangesAsync();
+                        }
+                        else
+                        {
+                            data.TopicId = null;
+                            data.DateUpdated = DateTime.Now;
+                            _context.Questions.Update(data);
+                            await _context.SaveChangesAsync();
+                        }return "Delete success.";
+                    }
+                    else
+                    {
+                        throw new Exception("Data is not exits.");
+                    }
+                }
+                else
+                {
+                    throw new Exception("Please select a QuestionId.");
+                }
+               
 
             }
             catch (Exception ex)

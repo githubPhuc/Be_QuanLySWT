@@ -183,6 +183,24 @@ namespace be.Controllers
                 return BadRequest(responseAPI);
             }
         }
+        [HttpPost("DeleteQuestionInQuestionFromTopic")]
+        public async Task<ActionResult> DeleteQuestionInQuestionFromTopic(int QuestionId)
+        {
+            ReponserApiService<string> responseAPI = new ReponserApiService<string>();
+            try
+            {
+                var data = await _topicService.DeleteQuestionInQuestionFromTopic(QuestionId);
+                responseAPI.Data = null;
+                responseAPI.Count = 1;
+                responseAPI.Message = data;
+                return Ok(responseAPI);
+            }
+            catch (Exception ex)
+            {
+                responseAPI.Message = ex.Message;
+                return BadRequest(responseAPI);
+            }
+        }
 
     }
 }
