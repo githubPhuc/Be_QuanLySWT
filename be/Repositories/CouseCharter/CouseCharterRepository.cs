@@ -61,16 +61,17 @@ namespace be.Repositories.ModRepository
                 throw new Exception("Error: " + ex.Message);
             }
         }
-        public async Task<List<getCouseCharter>> GetAllListCouseCharterBySubjectId(int SubjecId, int? GradeId)
+        public async Task<List<getCouseCharter>> GetAllListCouseCharterByTopicId(int TopicId)
         {
             try
             {
                 var _Grades = _context.Grades.AsNoTracking();
                 var _Subjects = _context.Subjects.AsNoTracking();
                 var _Coursechapters = _context.Coursechapters.Where(a => a.IsDelete == false).AsNoTracking();
+                var dataTopic =await _context.Topics.Where(a => a.TopicId == TopicId).FirstOrDefaultAsync();
                 var result = await (from a in _Coursechapters
-                                    where a.SubjecId == SubjecId
-                                    where a.IsDelete == false
+                                    where a.SubjecId == dataTopic.SubjectId && (a.GradeId == (dataTopic.Grade ?? 0)|| dataTopic.Grade == null)
+                                    where a.IsDelete == false && a.Status ==true
                                     select new getCouseCharter()
                                     {
                                         AccountDelete = a.AccountDelete,
@@ -87,7 +88,7 @@ namespace be.Repositories.ModRepository
                                         MainContent = a.MainContent,
                                         SubjecId = a.SubjecId,
                                     }).OrderByDescending(a => a.SubjecId).ThenByDescending(a => a.DateCreated).ToListAsync();
-                result = result.Where(a => (a.Grade != null && a.Grade.GradeId == GradeId)||GradeId==null).ToList();
+                
                 return result;
 
             }

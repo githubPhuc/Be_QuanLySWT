@@ -1,4 +1,5 @@
 ﻿using be.DTOs;
+using be.Models;
 using be.Repositories.CouseCharter;
 using be.Repositories.ModRepository;
 using Microsoft.AspNetCore.Mvc;
@@ -39,17 +40,17 @@ namespace be.Controllers
         }
 
         /// <summary>
-        /// Admin load chương theo id môn học 
+        /// Admin load chương theo id id topic
         /// </summary>
-        /// <param name="SubjecId"></param>
+        /// <param name="TopicId"></param>
         /// <returns></returns>
-        [HttpGet("GetAllListCouseCharterBySubjectId")]
-        public async Task<ActionResult> GetAllListCouseCharterBySubjectId(int SubjecId, int? GradeId)
+        [HttpGet("GetAllListCouseCharterByTopicId")]
+        public async Task<ActionResult> GetAllListCouseCharterByTopicId(int TopicId)
         {
             ReponserApiService<string> responseAPI = new ReponserApiService<string>();
             try
             {
-                var data = await _contextICouseCharterRepository.GetAllListCouseCharterBySubjectId(SubjecId, GradeId);
+                var data = await _contextICouseCharterRepository.GetAllListCouseCharterByTopicId(TopicId);
                 responseAPI.Data = data;
                 responseAPI.Count = data.Count();
                 responseAPI.Message = "Load thành công!!";
