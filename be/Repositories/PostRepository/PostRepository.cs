@@ -154,14 +154,14 @@ namespace be.Repositories.PostRepository
                                 a.PostId,
                                 SubjectId = a.SubjectId,
                                 SubjectName = (from s in _Subjects
-                                               where s.SubjectId == b.SubjectId
+                                               where s.SubjectId == a.SubjectId
                                                select s.SubjectName).FirstOrDefault() ?? "",
                                 AccountId = a.AccountId,
                                 Avatar = (from acc in _Accounts
-                                          where acc.AccountId == b.AccountId
+                                          where acc.AccountId == a.AccountId
                                           select acc.Avatar).FirstOrDefault() ?? "",
                                 FullName = (from acc in _Accounts
-                                            where acc.AccountId == b.AccountId
+                                            where acc.AccountId == a.AccountId
                                             select acc.FullName).FirstOrDefault() ?? "",
                                 a.PostText,
                                 a.PostFile,
@@ -183,14 +183,14 @@ namespace be.Repositories.PostRepository
                                 a.PostId,
                                 SubjectId = a.SubjectId,
                                 SubjectName = (from s in _Subjects
-                                               where s.SubjectId == b.SubjectId
+                                               where s.SubjectId == a.SubjectId
                                                select s.SubjectName).FirstOrDefault() ?? "",
                                 AccountId = a.AccountId,
                                 Avatar = (from acc in _Accounts
-                                          where acc.AccountId == b.AccountId
+                                          where acc.AccountId == a.AccountId
                                           select acc.Avatar).FirstOrDefault() ?? "",
                                 FullName = (from acc in _Accounts
-                                            where acc.AccountId == b.AccountId
+                                            where acc.AccountId == a.AccountId
                                             select acc.FullName).FirstOrDefault() ?? "",
                                 a.PostText,
                                 a.PostFile,
