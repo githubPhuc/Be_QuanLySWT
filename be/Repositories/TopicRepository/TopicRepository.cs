@@ -318,7 +318,8 @@ namespace be.Repositories.TopicRepository
                                      join testDetail in _context.Testdetails on questionTest.TestDetailId equals testDetail.TestDetailId
                                      join account in _context.Accounts on testDetail.AccountId equals account.AccountId
                                      join subject in _context.Subjects on question.CourseChapterId equals subject.SubjectId
-                                     where account.AccountId == accountId && testDetail.Submitted == true && topic.IsDelete == false
+                                     where account.AccountId == accountId
+                                     && testDetail.Submitted == true && topic.IsDelete == false && topic.Status == _Defines.ACTIVE_STRING
                                      select new
                                      {
                                          topic.TopicId,
