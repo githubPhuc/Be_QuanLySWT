@@ -279,7 +279,7 @@ namespace be.Repositories.TopicRepository
         {
             var listTopic = (from topic in _context.Topics
                              join subject in _context.Subjects on topic.SubjectId equals subject.SubjectId
-                             where topic.Grade == grade && subject.SubjectId == subjectId && topic.TopicType == topicType 
+                             where (topic.Grade == grade|| grade == null) && subject.SubjectId == subjectId && topic.TopicType == topicType 
                              where topic.IsDelete == false && topic.Status == _Defines.ACTIVE_STRING
                              select new
                              {
@@ -424,7 +424,8 @@ namespace be.Repositories.TopicRepository
         public object GetTopicByTopicType(int topicType)
         {
             var data = (from topic in _context.Topics
-                        where topic.TopicType == topicType && topic.FinishTestDate >= DateTime.Now && topic.IsDelete == false
+                        where topic.TopicType == topicType 
+                        && topic.FinishTestDate >= DateTime.Now && topic.IsDelete == false && topic.Status ==_Defines.ACTIVE_STRING
                         select new
                         {
                             topic.TopicId,
