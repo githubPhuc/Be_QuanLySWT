@@ -48,10 +48,6 @@ namespace be.Repositories.TestDetailRepository
             var _Subjects = _context.Subjects.AsNoTracking();
             var _Grades = _context.Grades.AsNoTracking();
 
-
-            
-
-
             var testDetailByAccountId = _Testdetails.Where(x => x.AccountId == accountID && x.Submitted == true)
                 .ToList().OrderByDescending(x => x.TestDetailId);
             foreach (var testDetail in testDetailByAccountId)

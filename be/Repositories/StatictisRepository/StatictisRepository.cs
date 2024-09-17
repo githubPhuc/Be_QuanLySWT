@@ -38,25 +38,32 @@ namespace be.Repositories.StatictisRepository
                 }
                 foreach (var test in testDetailByUser)
                 {
-                    var totalQuestionInTest = _context.Questiontests.Where(x => x.TestDetailId == test.TestDetailId).Count();
-                    totalQuestionDone += totalQuestionInTest;
-                    totalScore += (double)test.Score;
-                    var firstQuestionInTest = _context.Questiontests.Where(x => x.TestDetailId == test.TestDetailId).FirstOrDefault();
-                    var question = _context.Questions.FirstOrDefault(x => x.QuestionId == firstQuestionInTest.QuestionId);
-                    var topic = _context.Topics.FirstOrDefault(x => x.TopicId == question.TopicId);
-                    if (topic.Duration.Equals("15"))    
+                    try
                     {
-                        totalTime += 15;
-                    } else if (topic.Duration.Equals("45"))
-                    {
-                        totalTime += 45;
-                    } else if (topic.Duration.Equals("60"))
-                    {
-                        totalTime += 60;
-                    } else
-                    {
-                        totalTime += 120;
+                        var totalQuestionInTest = _context.Questiontests.Where(x => x.TestDetailId == test.TestDetailId).Count();
+                        totalQuestionDone += totalQuestionInTest;
+                        totalScore += (double)test.Score;
+                        var firstQuestionInTest = _context.Questiontests.Where(x => x.TestDetailId == test.TestDetailId).FirstOrDefault();
+                        var question = _context.Questions.FirstOrDefault(x => x.QuestionId == firstQuestionInTest.QuestionId);
+                        var topic = _context.Topics.FirstOrDefault(x => x.TopicId == question.TopicId);
+                        if (topic.Duration.Equals("15"))
+                        {
+                            totalTime += 15;
+                        }
+                        else if (topic.Duration.Equals("45"))
+                        {
+                            totalTime += 45;
+                        }
+                        else if (topic.Duration.Equals("60"))
+                        {
+                            totalTime += 60;
+                        }
+                        else
+                        {
+                            totalTime += 120;
+                        }
                     }
+                    catch { continue; }
                 }
                 return new
                 {
@@ -67,11 +74,11 @@ namespace be.Repositories.StatictisRepository
                     totalTime = totalTime,
                 };
             }
-            catch
+            catch(Exception ex)
             {
                 return new
                 {
-                    message = "Failed",
+                    message = "Failed "+ex.Message,
                     status = 400,
                 };
             }
