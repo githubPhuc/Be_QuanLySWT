@@ -385,7 +385,7 @@ namespace be.Repositories.TopicRepository
             }
             else
             {
-                if(grade== null)
+                if(grade == null && topicType!= 5)
                 {
                     return new
                     {
