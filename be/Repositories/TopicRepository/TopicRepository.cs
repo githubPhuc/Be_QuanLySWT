@@ -277,6 +277,10 @@ namespace be.Repositories.TopicRepository
 
         public async Task<object> GetTopicByGrade(int? grade, int subjectId, int? topicType, int accountId)
         {
+            if (topicType == 5 ||topicType ==6)
+            {
+                grade = null;
+            }
             var listTopic = (from topic in _context.Topics
                              join subject in _context.Subjects on topic.SubjectId equals subject.SubjectId
                              where (topic.Grade == grade|| grade == null) && subject.SubjectId == subjectId && topic.TopicType == topicType 
