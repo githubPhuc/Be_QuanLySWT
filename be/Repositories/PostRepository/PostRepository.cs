@@ -327,33 +327,67 @@ namespace be.Repositories.PostRepository
             }
             else
             {
-                var posts = (from a in _Postfavourites
-                             join b in _Posts on a.PostId equals b.PostId
-                             where a.AccountId == accountId &&(b.Status == status || a.Status == status)  && b.SubjectId == subjectId
-                             select new
-                             {
-                                 a.PostId,
-                                 SubjectId = b.SubjectId,
-                                 SubjectName = (from s in _Subjects
-                                                where s.SubjectId == b.SubjectId
-                                                select s.SubjectName).FirstOrDefault() ?? "",
-                                 AccountId = b.AccountId,
-                                 Avatar = (from acc in _Accounts
-                                           where acc.AccountId == b.AccountId
-                                           select acc.Avatar).FirstOrDefault() ?? "",
-                                 FullName = (from acc in _Accounts
-                                             where acc.AccountId == b.AccountId
-                                             select acc.FullName).FirstOrDefault() ?? "",
-                                 b.PostText,
-                                 b.PostFile,
-                                 b.Status,
-                                 b.DateCreated,
-                                 b.Postlikes,
-                                 b.Postfavourites,
-                                 countComment = _Postcomments.Count(z => z.PostId == b.PostId),
-                                 countLike = _Postlikes.Count(z => z.PostId == b.PostId)
-                             }).OrderByDescending(h => h.DateCreated).ToList();
-                return posts;
+                if(status == "Saved")
+                {
+                    var posts = (from a in _Postfavourites
+                                 join b in _Posts on a.PostId equals b.PostId
+                                 where a.AccountId == accountId &&b.Status == "Approved" && a.Status == status && b.SubjectId == subjectId
+                                 select new
+                                 {
+                                     a.PostId,
+                                     SubjectId = b.SubjectId,
+                                     SubjectName = (from s in _Subjects
+                                                    where s.SubjectId == b.SubjectId
+                                                    select s.SubjectName).FirstOrDefault() ?? "",
+                                     AccountId = b.AccountId,
+                                     Avatar = (from acc in _Accounts
+                                               where acc.AccountId == b.AccountId
+                                               select acc.Avatar).FirstOrDefault() ?? "",
+                                     FullName = (from acc in _Accounts
+                                                 where acc.AccountId == b.AccountId
+                                                 select acc.FullName).FirstOrDefault() ?? "",
+                                     b.PostText,
+                                     b.PostFile,
+                                     b.Status,
+                                     b.DateCreated,
+                                     b.Postlikes,
+                                     b.Postfavourites,
+                                     countComment = _Postcomments.Count(z => z.PostId == b.PostId),
+                                     countLike = _Postlikes.Count(z => z.PostId == b.PostId)
+                                 }).OrderByDescending(h => h.DateCreated).ToList();
+                    return posts;
+
+                }
+                else
+                {
+                    var data = (from b in _Posts
+                                where b.SubjectId == subjectId && b.Status == status && b.AccountId == accountId
+                                select new
+                                {
+                                    b.PostId,
+                                    SubjectId = b.SubjectId,
+                                    SubjectName = (from s in _Subjects
+                                                   where s.SubjectId == b.SubjectId
+                                                   select s.SubjectName).FirstOrDefault() ?? "",
+                                    AccountId = b.AccountId,
+                                    Avatar = (from acc in _Accounts
+                                              where acc.AccountId == b.AccountId
+                                              select acc.Avatar).FirstOrDefault() ?? "",
+                                    FullName = (from acc in _Accounts
+                                                where acc.AccountId == b.AccountId
+                                                select acc.FullName).FirstOrDefault() ?? "",
+                                    b.PostText,
+                                    b.PostFile,
+                                    b.Status,
+                                    b.DateCreated,
+                                    b.Postlikes,
+                                    b.Postfavourites,
+                                    countComment = _Postcomments.Count(z => z.PostId == b.PostId),
+                                    countLike = _Postlikes.Count(z => z.PostId == b.PostId)
+                                }).OrderByDescending(h => h.DateCreated).ToList();
+
+                    return data;
+                } 
             }
 
         }
