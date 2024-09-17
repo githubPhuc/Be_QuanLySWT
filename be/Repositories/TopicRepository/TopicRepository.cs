@@ -329,45 +329,101 @@ namespace be.Repositories.TopicRepository
                                      }).OrderBy(x => x.Score).ToList();
 
             var data = new List<TopicDTO>();
-
-            foreach (var item in listTopic)
+            if (topicType == 6)
             {
-                var topicDTO = new TopicDTO();
-                topicDTO.TopicId = item.TopicId;
-                topicDTO.TopicName = item.TopicName;
-                topicDTO.SubjectName = item.SubjectName;
-                topicDTO.SubjectId = item.SubjectId;
-                var totalQuestion = (from topic in _context.Topics
-                                     join question in _context.Questions
-                                     on topic.TopicId equals question.TopicId
-                                     where topic.TopicId == item.TopicId && question.Status == _Defines.ACTIVE_STRING
-                                     select new
-                                     {
-                                         topic.TopicId
-                                     }).Count();
-                topicDTO.TotalQuestion = totalQuestion;
-                topicDTO.Duration = item.Duration;
-                topicDTO.StartTestDate = item.StartTestDate?.ToString("dd/MM/yyyy H:mm");
-                topicDTO.FinishTestDate = item.FinishTestDate?.ToString("dd/MM/yyyy H:mm");
-
-                foreach (var itemSubmited in listTopicSubmited)
+                var topicIds = (from a in _context.Testdetails
+                                join b in _context.Questiontests on a.TestDetailId equals b.TestDetailId
+                                join c in _context.Questions on b.QuestionId equals c.QuestionId
+                                where a.AccountId == accountId
+                                group c by c.TopicId into g
+                                select new
+                                {
+                                    topic_ = g.Key
+                                }).ToList();
+                foreach (var item in listTopic)
                 {
-                    if (item.TopicId == itemSubmited.TopicId)
+                    var topicDTO = new TopicDTO();
+                    topicDTO.TopicId = item.TopicId;
+                    topicDTO.TopicName = item.TopicName;
+                    topicDTO.SubjectName = item.SubjectName;
+                    topicDTO.SubjectId = item.SubjectId;
+                    var totalQuestion = (from topic in _context.Topics
+                                         join question in _context.Questions
+                                         on topic.TopicId equals question.TopicId
+                                         where topic.TopicId == item.TopicId && question.Status == _Defines.ACTIVE_STRING
+                                         select new
+                                         {
+                                             topic.TopicId
+                                         }).Count();
+                    topicDTO.TotalQuestion = totalQuestion;
+                    topicDTO.Duration = item.Duration;
+                    topicDTO.StartTestDate = item.StartTestDate?.ToString("dd/MM/yyyy H:mm");
+                    topicDTO.FinishTestDate = item.FinishTestDate?.ToString("dd/MM/yyyy H:mm");
+
+                    foreach (var itemSubmited in listTopicSubmited)
                     {
-                        topicDTO.Score = itemSubmited.Score;
+                        if (item.TopicId == itemSubmited.TopicId)
+                        {
+                            topicDTO.Score = itemSubmited.Score;
+                        }
+                    }
+                    if(topicIds.Where(a=>a.topic_ == item.TopicId).FirstOrDefault()!= null)
+                    {
+                        topicDTO.Status = _Defines.LOCK_STRING;
+                    }
+                    if (item.FinishTestDate >= DateTime.Now || string.IsNullOrEmpty(topicDTO.FinishTestDate))
+                    {
+                        data.Add(topicDTO);
                     }
                 }
-                if (item.FinishTestDate >= DateTime.Now || string.IsNullOrEmpty(topicDTO.FinishTestDate))
+                
+                return new
                 {
-                    data.Add(topicDTO);
-                }
+                    status = 200,
+                    data,
+                };
             }
-
-            return new
+            else
             {
-                status = 200,
-                data,
-            };
+                foreach (var item in listTopic)
+                {
+                    var topicDTO = new TopicDTO();
+                    topicDTO.TopicId = item.TopicId;
+                    topicDTO.TopicName = item.TopicName;
+                    topicDTO.SubjectName = item.SubjectName;
+                    topicDTO.SubjectId = item.SubjectId;
+                    var totalQuestion = (from topic in _context.Topics
+                                         join question in _context.Questions
+                                         on topic.TopicId equals question.TopicId
+                                         where topic.TopicId == item.TopicId && question.Status == _Defines.ACTIVE_STRING
+                                         select new
+                                         {
+                                             topic.TopicId
+                                         }).Count();
+                    topicDTO.TotalQuestion = totalQuestion;
+                    topicDTO.Duration = item.Duration;
+                    topicDTO.StartTestDate = item.StartTestDate?.ToString("dd/MM/yyyy H:mm");
+                    topicDTO.FinishTestDate = item.FinishTestDate?.ToString("dd/MM/yyyy H:mm");
+
+                    foreach (var itemSubmited in listTopicSubmited)
+                    {
+                        if (item.TopicId == itemSubmited.TopicId)
+                        {
+                            topicDTO.Score = itemSubmited.Score;
+                        }
+                    }
+                    if (item.FinishTestDate >= DateTime.Now || string.IsNullOrEmpty(topicDTO.FinishTestDate))
+                    {
+                        data.Add(topicDTO);
+                    }
+                }
+
+                return new
+                {
+                    status = 200,
+                    data,
+                };
+            }
         }
         
         public object GetTopicById(int topicId)
