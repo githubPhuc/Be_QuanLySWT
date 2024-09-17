@@ -385,6 +385,14 @@ namespace be.Repositories.TopicRepository
             }
             else
             {
+                if(grade== null)
+                {
+                    return new
+                    {
+                        status = 200,
+                        data,
+                    };
+                }
                 foreach (var item in listTopic)
                 {
                     var topicDTO = new TopicDTO();
