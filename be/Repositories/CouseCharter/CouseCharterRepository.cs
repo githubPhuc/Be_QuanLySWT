@@ -201,6 +201,7 @@ namespace be.Repositories.ModRepository
                 var _Questions = _context.Questions.AsNoTracking();
                 var _Level = _context.Levels.AsNoTracking();
                 var _Topics = _context.Topics.AsNoTracking();
+                var _Accounts = _context.Accounts.AsNoTracking();
                 var _Coursechapters = _context.Coursechapters.Where(a => a.IsDelete == false).AsNoTracking();
                 var result = await (from a in _Questions
                                     where a.CourseChapterId ==IdCouseChapter 
@@ -223,7 +224,8 @@ namespace be.Repositories.ModRepository
                                         DateUpdated = a.DateUpdated,
                                         OptionA = a.OptionA,
                                         OptionB = a.OptionB,
-                                        Answer= _Answers.Where(z=>z.AnswerId == a.AnswerId).FirstOrDefault(),
+                                        accountCreated = _Accounts.Where(a=>a.AccountId == a.UserCreated).FirstOrDefault(),
+                                        Answer = _Answers.Where(z=>z.AnswerId == a.AnswerId).FirstOrDefault(),
                                         CourseChapter = _CourseChapters.Where(z=>z.ChapterId == a.CourseChapterId).FirstOrDefault(),
                                         CourseChapterId = a.CourseChapterId,
                                         Level = _Level.Where(z=>z.LevelId == a.LevelId).FirstOrDefault(),

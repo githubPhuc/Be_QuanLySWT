@@ -37,6 +37,7 @@ namespace be.Repositories.CouseCharter
         public string? Solution { get; set; }
         public string? Status { get; set; }
         public int? UserCreated { get; set; }
+        public Account? accountCreated { get; set; }
         public DateTime? DateCreated { get; set; }
         public int? UserUpdated { get; set; }
         public DateTime? DateUpdated { get; set; }
