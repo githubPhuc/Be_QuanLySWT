@@ -156,35 +156,6 @@
                                 </td>
                             </tr>
                         </table>
-                        <script>
-                            function confirmEmail(email) {{
-                                const urlParams = new URLSearchParams(window.location.search);
-                                const apiUrl = `https://localhost:7207/api/home/confirm?email=${{email}}`;
-
-                                fetch(apiUrl)
-                                    .then(response => response.json())
-                                    .then(data => {{
-                                        if (data.status === 200) {{
-                                            const userConfirmed = confirm(""Xác nhận thành công! Bạn có muốn chuyển đến trang đăng nhập?"");
-                                            if (userConfirmed) {{
-                                                // Nếu người dùng nhấn OK, chuyển hướng đến trang đăng nhập
-                                                window.location.href = ""https://localhost:3000/home/login"";
-                                            }} else {{
-                                                alert(""Bạn có thể quay lại email của bạn."");
-                                                // Hoặc bạn có thể cung cấp một liên kết trở về trang email, ví dụ:
-                                                // window.location.href = ""LINK_TO_YOUR_EMAIL_PAGE"";
-                                            }}
-                                        }} else {{
-                                            // Hiển thị thông báo lỗi
-                                            alert(""Có lỗi xảy ra, xin vui lòng thử lại."");
-                                        }}
-                                    }})
-                                    .catch(error => {{
-                                        console.error('Có lỗi trong quá trình xác nhận:', error);
-                                        alert(""Có lỗi xảy ra, xin vui lòng thử lại."");
-                                    }});
-                            }}
-                        </script>
                     </body>
                     </html>";
         }
