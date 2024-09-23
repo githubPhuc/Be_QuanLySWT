@@ -59,7 +59,7 @@ public partial class SwtDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=113.161.92.14;Initial Catalog=SWT_DB;Persist Security Info=True;User ID=sa;Password=@@@CommSights123@@@;Trust Server Certificate=True");
+        => optionsBuilder.UseSqlServer("Data Source=113.161.92.14;Initial Catalog=SWT_DB;Persist Security Info=True;User ID=sa;Password=@@@CommSightsVn123@@@;Trust Server Certificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
