@@ -461,6 +461,7 @@ namespace be.Repositories.ModRepository
 
                         data.DateUpdated = DateTime.UtcNow.AddHours(7);
                         data.UserUpdated = model.AccountId;
+                        data.AccountId = model.AccountId;
                         data.QuestionContext = model.QuestionContext;
                         data.AnswerId = model.AnswerId;
                         data.OptionA = model.OptionA;
@@ -582,6 +583,7 @@ namespace be.Repositories.ModRepository
                                                 DateUpdated = DateTime.UtcNow.AddHours(7),
                                                 DateDelete = DateTime.UtcNow.AddHours(7),
                                                 CourseChapterId = CourseChapterID,
+                                                AccountId = AccountId,
                                                 UserCreated = AccountId,
                                                 UserUpdated = AccountId,
                                                 UserDelete = AccountId,
