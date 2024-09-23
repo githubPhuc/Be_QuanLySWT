@@ -193,6 +193,7 @@ namespace be.Repositories.TopicRepository
         {
             var subjectList = _context.Subjects.Where(a=>a.IsDelete == false).ToList();
             var GradesList = _context.Grades.ToList();
+            var _Questions = _context.Questions.ToList();
             
 
             List < TopicDTO > topicList = new List<TopicDTO>();
@@ -216,7 +217,7 @@ namespace be.Repositories.TopicRepository
                 topicDTO.SubjectName = subject.SubjectName;
                 topicDTO.TopicName = item.TopicName;
                 topicDTO.Duration = item.Duration;
-                topicDTO.TotalQuestion = item.TotalQuestion;
+                topicDTO.TotalQuestion = _Questions.Where(z=>z.TopicId == item.TopicId).Count();
                 topicDTO.TopicType = item.TopicType;
                 if (topicDTO.TopicType == 1)
                 {
