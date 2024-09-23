@@ -100,6 +100,7 @@ namespace be.Repositories.ModRepository
                 throw new Exception("Error: " + ex.Message);
             }
         }
+
         public async Task<List<getCouseCharter>> GetCouseCharterByGrade(int GradeId,int SubjectId,string? ChapterSearch)
         {
             try
@@ -150,6 +151,63 @@ namespace be.Repositories.ModRepository
                 {
                     var result = await (from a in _Questions
                                         where a.CourseChapterId == IdCourseChapter
+                                        select new getQuestionInCourseChapter
+                                        {
+                                            QuestionId = a.QuestionId,
+                                            QuestionContext = a.QuestionContext,
+                                            Image = a.Image,
+                                            OptionC = a.OptionC,
+                                            OptionD = a.OptionD,
+                                            Solution = a.Solution,
+                                            Status = a.Status,
+                                            UserCreated = a.UserCreated,
+                                            DateCreated = a.DateCreated,
+                                            UserDelete = a.UserDelete,
+                                            DateDelete = a.DateDelete,
+                                            UserUpdated = a.UserUpdated,
+                                            DateUpdated = a.DateUpdated,
+                                            OptionA = a.OptionA,
+                                            OptionB = a.OptionB,
+                                            Answer = _Answers.Where(z => z.AnswerId == a.AnswerId).FirstOrDefault(),
+                                            CourseChapter = _CourseChapters.Where(z => z.ChapterId == a.CourseChapterId).FirstOrDefault(),
+                                            CourseChapterId = a.CourseChapterId,
+                                            Level = _Level.Where(z => z.LevelId == a.LevelId).FirstOrDefault(),
+                                            LevelId = a.LevelId,
+                                            Topic = _Topics.Where(z => z.TopicId == a.TopicId).FirstOrDefault(),
+                                            TopicId = a.TopicId,
+                                        }).ToListAsync();
+
+                    var random = new Random();
+                    var shuffledList = result.OrderBy(x => random.Next()).ToList();
+                    var randomTenRows = shuffledList.Take(_defines.NUMBER_RANDOM_COURSECHAPTER).ToList();
+                    return randomTenRows;
+
+                }
+                else
+                {
+                    throw new Exception("Data does not exist or has been deleted");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error: " + ex.Message);
+            }
+        }
+        public async Task<List<getQuestionInCourseChapter>> GetQuestionByCourseChaptersInMod(int IdCourseChapter)
+        {
+            try
+            {
+                var _Grades = _context.Grades.AsNoTracking();
+                var _CourseChapters = _context.Coursechapters.AsNoTracking();
+                var _Answers = _context.Answers.AsNoTracking();
+                var _Questions = _context.Questions.AsNoTracking();
+                var _Level = _context.Levels.AsNoTracking();
+                var _Topics = _context.Topics.AsNoTracking();
+                var _Coursechapters = _context.Coursechapters.Where(a => a.Status == true && a.IsDelete == false).AsNoTracking();
+                if (_Coursechapters.Count() > 0)
+                {
+                    var result = await (from a in _Questions
+                                        where a.CourseChapterId == IdCourseChapter && a.TopicId == null
                                         select new getQuestionInCourseChapter
                                         {
                                             QuestionId = a.QuestionId,
