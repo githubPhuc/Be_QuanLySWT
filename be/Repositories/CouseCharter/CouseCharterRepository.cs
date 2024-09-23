@@ -33,6 +33,7 @@ namespace be.Repositories.ModRepository
             {
                 var _Grades = _context.Grades.AsNoTracking();
                 var _Subjects = _context.Subjects.AsNoTracking();
+                var _Questions = _context.Questions.AsNoTracking();
                 var _Coursechapters = _context.Coursechapters.Where(a=>a.IsDelete == false).AsNoTracking();
                 var result = await (from a in _Coursechapters
                                     where (string.IsNullOrEmpty(ChapterTitleSearch) == true) || a.ChapterTitle.ToLower().Contains(ChapterTitleSearch.ToLower())
@@ -46,6 +47,7 @@ namespace be.Repositories.ModRepository
                                         DateUpdate = a.DateUpdate,
                                         AccountUpdate = a.AccountUpdate,
                                         Status = a.Status,
+                                        TotalQuestion = _Questions.Where(z=>z.CourseChapterId == a.ChapterId).Count(),
                                         ChapterId = a.ChapterId,
                                         Grade = _Grades.Where(z => z.GradeId == a.GradeId).FirstOrDefault(),
                                         Subject = _Subjects.Where(z => z.SubjectId == a.SubjecId).FirstOrDefault(),
@@ -66,7 +68,7 @@ namespace be.Repositories.ModRepository
             try
             {
                 var _Grades = _context.Grades.AsNoTracking();
-                var _Subjects = _context.Subjects.AsNoTracking();
+                var _Subjects = _context.Subjects.AsNoTracking(); var _Questions = _context.Questions.AsNoTracking();
                 var _Coursechapters = _context.Coursechapters.Where(a => a.IsDelete == false).AsNoTracking();
                 var dataTopic =await _context.Topics.Where(a => a.TopicId == TopicId).FirstOrDefaultAsync();
                 var result = await (from a in _Coursechapters
@@ -81,6 +83,7 @@ namespace be.Repositories.ModRepository
                                         DateUpdate = a.DateUpdate,
                                         AccountUpdate = a.AccountUpdate,
                                         Status = a.Status,
+                                        TotalQuestion = _Questions.Where(z => z.CourseChapterId == a.ChapterId).Count(),
                                         ChapterId = a.ChapterId,
                                         Grade = _Grades.Where(z => z.GradeId == a.GradeId).FirstOrDefault(),
                                         Subject = _Subjects.Where(z => z.SubjectId == a.SubjecId).FirstOrDefault(),

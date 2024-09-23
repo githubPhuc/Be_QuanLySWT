@@ -6,6 +6,7 @@ namespace be.Repositories.CouseCharter
     {
         public int ChapterId { get; set; }
         public int? SubjecId { get; set; }
+        public int? TotalQuestion { get; set; }
         public string? ChapterTitle { get; set; }
         public string? MainContent { get; set; }
         public DateTime? DateCreated { get; set; }
