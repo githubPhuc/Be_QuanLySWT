@@ -13,6 +13,7 @@ namespace be.Repositories.ModRepository
         public Task<List<getQuestionInCourseChapter>> GetAllListQuestionInCouseCharter(int IdCouseChapter, string? nameQuestion);
         public Task<List<getCouseCharter>> GetCouseCharterByGrade(int GradeId, int SubjectId, string? ChapterSearch);
         public Task<List<getQuestionInCourseChapter>> GetQuestionByCourseChaptersInUser(int IdCourseChapter);
+        public Task<List<getQuestionInCourseChapter>> GetQuestionByCourseChaptersInMod(int IdCourseChapter);
         public Task<string> AddCourceCharter(PostDataInsertCourseChapter model);
         public Task<string> UpdateCourceCharter(int IdCourceChapter, PostDataInsertCourseChapter model);
         public Task<string> DeleteCourceCharter(int IdCourceChapter, int AccountId);

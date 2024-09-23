@@ -134,6 +134,24 @@ namespace be.Controllers
                 return BadRequest(responseAPI);
             }
         }
+        [HttpGet("GetQuestionByCourseChaptersInMod")]
+        public async Task<ActionResult> GetQuestionByCourseChaptersInMod(int IdCourseChapter)
+        {
+            ReponserApiService<string> responseAPI = new ReponserApiService<string>();
+            try
+            {
+                var data = await _contextICouseCharterRepository.GetQuestionByCourseChaptersInMod(IdCourseChapter);
+                responseAPI.Data = data;
+                responseAPI.Count = data.Count();
+                responseAPI.Message = "Load thành công!!";
+                return Ok(responseAPI);
+            }
+            catch (Exception ex)
+            {
+                responseAPI.Message = ex.Message;
+                return BadRequest(responseAPI);
+            }
+        }
         [HttpPost("AddCourceCharter")]
         public async Task<ActionResult> AddCourceCharter(PostDataInsertCourseChapter model)
         {
