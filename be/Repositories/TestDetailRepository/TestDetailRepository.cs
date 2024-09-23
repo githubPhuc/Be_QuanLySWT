@@ -272,7 +272,7 @@ namespace be.Repositories.TestDetailRepository
                         count++;
                     }
                 }
-                string score = (count * 10 / listQuestion.Count()).ToString("F2");
+                string score = ((10.0 / listQuestion.Count())* count).ToString("F2");
                 dataUpdate.Score = Convert.ToDouble(score);
                 dataUpdate.Submitted = true;
                 dataUpdate.DateCreated = DateTime.Now;

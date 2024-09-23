@@ -465,6 +465,7 @@ namespace be.Repositories.TopicRepository
         }
         public async Task<object> GetRankingOfTopic(int topicId, int topicType)
         {
+
             var data = (from topic in _context.Topics
                         join question in _context.Questions on topic.TopicId equals question.TopicId
                         join questionTest in _context.Questiontests  on question.QuestionId equals questionTest.QuestionId
