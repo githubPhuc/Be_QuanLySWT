@@ -196,7 +196,7 @@ namespace be.Repositories.UserRepository
             account.SchoolName = register.SchoolName;
             account.DateCreated = DateTime.Now;
             account.CreateDate = DateTime.Now;
-            account.Status = _Defines.ACTIVE_STRING;
+            account.Status = _Defines.INACTIVE_STRING;
             if (!string.IsNullOrEmpty(register.Avatar))
             {
                 account.Avatar = register.Avatar;
