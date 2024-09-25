@@ -486,7 +486,7 @@ namespace be.Repositories.ModRepository
                         OptionD = model.OptionD,
                         Solution = model.Solution,
                         Image = model.Image,
-                        Status = "Inactive",
+                        Status = _defines.ACTIVE_STRING,
                         IsDelete = false,
                         LevelId = model.LevelId,
                     };
@@ -531,7 +531,7 @@ namespace be.Repositories.ModRepository
                         data.OptionD = model.OptionD;
                         data.Solution = model.Solution;
                         data.Image = model.Image;
-                        data.Status = "Active";
+                        data.Status = _defines.ACTIVE_STRING;
                         data.LevelId = model.LevelId;
                         _context.Questions.Update(data);
                         await _context.SaveChangesAsync();
@@ -549,22 +549,26 @@ namespace be.Repositories.ModRepository
         {
             try
             {
-               
-                    var data = await _context.Questions.Where(a => a.QuestionId == QuestionId).FirstOrDefaultAsync();
-                    if (data == null)
-                    {
-                        throw new Exception("Data question already exists.");
-                    }
-                    else
-                    {
 
-                        
-                        _context.Questions.Remove(data);
-                        await _context.SaveChangesAsync();
-                        return $"Delete {data.QuestionContext} success.";
-                    }
+                var data = await _context.Questions.Where(a => a.QuestionId == QuestionId).FirstOrDefaultAsync();
+                if (data == null)
+                {
+                    throw new Exception("Data question already exists.");
+                }
+                else if (data.TopicId != null)
+                {
+                    throw new Exception("Data question in topic already exists.");
+                }
+                else
+                {
 
-                
+
+                    _context.Questions.Remove(data);
+                    await _context.SaveChangesAsync();
+                    return $"Delete {data.QuestionContext} success.";
+                }
+
+
             }
             catch (Exception ex)
             {
@@ -656,7 +660,7 @@ namespace be.Repositories.ModRepository
                                                 OptionD = item.OptionD,
                                                 Solution = item.Solution,
                                                 Image = item.UrlImage,
-                                                Status = "Inactive",
+                                                Status = _defines.ACTIVE_STRING,
                                                 IsDelete = false,
                                                 LevelId = _Levels.Where(a => a.LevelName == item.LevelName).FirstOrDefault()?.LevelId ?? 0,
                                             });
