@@ -6,7 +6,27 @@
         {
             get { return 10; }
         }
-        public int NUMBER_RANDOM_TOPIC
+        public int NUMBER_RANDOM_TOPIC_1
+        {
+            get { return 10; }
+        }
+        public int NUMBER_RANDOM_TOPIC_2
+        {
+            get { return 10; }
+        }
+        public int NUMBER_RANDOM_TOPIC_3
+        {
+            get { return 10; }
+        }
+        public int NUMBER_RANDOM_TOPIC_4
+        {
+            get { return 10; }
+        }
+        public int NUMBER_RANDOM_TOPIC_5
+        {
+            get { return 10; }
+        }
+        public int NUMBER_RANDOM_TOPIC_6
         {
             get { return 10; }
         }

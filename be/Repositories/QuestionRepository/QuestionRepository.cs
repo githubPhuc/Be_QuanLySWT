@@ -217,16 +217,14 @@ namespace be.Repositories.QuestionRepository
                     status = 400,
                 };
             }
-            var random = new Random();
-            var shuffledList = result.OrderBy(x => random.Next()).ToList();
-            var randomTenRows = shuffledList.Take(_defines.NUMBER_RANDOM_TOPIC).OrderByDescending(x => x.questionId).ToList();
             return new
             {
                 message = "Get data successfully",
                 status = 200,
-                data = randomTenRows.OrderByDescending(x => x.questionId).ToList(),
+                data = result.ToList(),
             };
         }
+        
 
 
 
@@ -266,6 +264,72 @@ namespace be.Repositories.QuestionRepository
             {
                 status = 200,
                 data,
+            };
+        }
+        public async Task<object> GetQuestionByTopicIdInUser(int topicId)
+        {
+            var topics =await _context.Topics.Where(a => a.TopicId == topicId).FirstOrDefaultAsync();
+            var data = await (from question in _context.Questions
+                              join answer in _context.Answers
+                              on question.AnswerId equals answer.AnswerId
+                              join level in _context.Levels
+                              on question.LevelId equals level.LevelId
+                              join topic in _context.Topics
+                              on question.TopicId equals topic.TopicId
+                              where question.TopicId == topicId && question.Status == _defines.ACTIVE_STRING
+                              where topic.IsDelete == false
+                              select new
+                              {
+                                  topicId = topic.TopicId,
+                                  topicName = topic.TopicName,
+                                  questionId = question.QuestionId,
+                                  subjectId = question.CourseChapterId,
+                                  answerId = question.AnswerId,
+                                  answerName = answer.AnswerName,
+                                  levelId = question.LevelId,
+                                  levelName = level.LevelName,
+                                  image = question.Image,
+                                  questionContext = question.QuestionContext,
+                                  optionA = question.OptionA,
+                                  optionB = question.OptionB,
+                                  optionC = question.OptionC,
+                                  optionD = question.OptionD,
+                                  solution = question.Solution,
+                                  isRight = false,
+                              }).OrderBy(x => x.questionId).ToListAsync();
+            int Numrandom = 0;
+            switch (topics?.TopicType??0)
+            {
+                case 1:
+                    Numrandom = _defines.NUMBER_RANDOM_TOPIC_1;
+                    break;
+                case 2:
+                    Numrandom = _defines.NUMBER_RANDOM_TOPIC_2;
+                    break;
+                case 3:
+                    Numrandom = _defines.NUMBER_RANDOM_TOPIC_3;
+                    break;
+                case 4:
+                    Numrandom = _defines.NUMBER_RANDOM_TOPIC_4;
+                    break;
+                case 5:
+                    Numrandom = _defines.NUMBER_RANDOM_TOPIC_5;
+                    break;
+                case 6:
+                    Numrandom = _defines.NUMBER_RANDOM_TOPIC_6;
+                    break;
+                default:
+                    Numrandom = 10;
+                    break;
+            }
+            var random = new Random();
+            var shuffledList = data.OrderBy(x => random.Next()).ToList();
+            var randomTenRows = shuffledList.Take(Numrandom).OrderByDescending(x => x.questionId).ToList();
+            return new
+            {
+                message = "Get data successfully",
+                status = 200,
+                data = randomTenRows.OrderByDescending(x => x.questionId).ToList(),
             };
         }
     }

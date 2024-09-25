@@ -45,6 +45,19 @@ namespace be.Controllers
                 return BadRequest();
             }
         }
+        [HttpGet("GetQuestionByTopicIdInUser")]
+        public async Task<ActionResult> GetQuestionByTopicIdInUser(int topicId)
+        {
+            try
+            {
+                var result =await _questionService.GetQuestionByTopicIdInUser(topicId);
+                return Ok(result);
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
 
         [HttpPost("addQuestion")]
         public async Task<ActionResult> AddQuestion (CreateQuestionDTO question)

@@ -6,7 +6,7 @@ namespace be.Services.QuestionService
     public interface IQuestionService
     {
         Task<object> GetQuestionByTopicId(int topicId);
-
+        public Task<object> GetQuestionByTopicIdInUser(int topicId);
         public void AddQuestionByExcel(Question question);
         public object GetAllQuestionByTopicId(int topicId);
         public object CreateQuestion(CreateQuestionDTO questionDTO);

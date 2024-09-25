@@ -22,7 +22,9 @@ namespace be.Services.QuestionService
         {
             return _questionRepository.ApproveAllQuestionOfTopic(topicId);
         }
-
+        public async Task<object> GetQuestionByTopicIdInUser(int topicId)
+        => await _questionRepository.GetQuestionByTopicIdInUser(topicId);
+        
         public object ChangeStatusQuestion(int questionId, string status)
         {
             return _questionRepository.ChangeStatusQuestion(questionId, status);    

@@ -7,7 +7,7 @@ namespace be.Repositories.QuestionRepository
     {
         Task<object> GetQuestionByTopicId(int topicId);
         public void AddQuestionByExcel(Question question);
-
+        public Task<object> GetQuestionByTopicIdInUser(int topicId);
         public object GetAllQuestionByTopicId(int topicId);
         public object CreateQuestion(CreateQuestionDTO questionDTO);
         public object ChangeStatusQuestion(int questionId, string status);
