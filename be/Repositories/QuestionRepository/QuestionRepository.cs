@@ -84,7 +84,7 @@ namespace be.Repositories.QuestionRepository
         {
             var question = new Question
             {
-                CourseChapterId = questionDTO.SubjectId,
+                //CourseChapterId = questionDTO.SubjectId,
                 AccountId = questionDTO.AccountId,
                 AnswerId = questionDTO.AnswerId,
                 LevelId = questionDTO.LevelId,

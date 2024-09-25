@@ -3,6 +3,7 @@ using be.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Identity.Client;
 using Org.BouncyCastle.Asn1.Pkcs;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 
@@ -391,15 +392,18 @@ namespace be.Repositories.StatictisRepository
         {
             try
             {
-                var listSubject = _context.Subjects.ToList();
-                List<DataQuestion> data = new List<DataQuestion>();
-                foreach(var item in listSubject)
-                {
-                    DataQuestion dataQuestion = new DataQuestion();
-                    dataQuestion.SubjectName = item.SubjectName;
-                    dataQuestion.TotalQuestion = _context.Questions.Where(x => x.CourseChapterId == item.SubjectId).Count();
-                    data.Add(dataQuestion);
-                }
+                var _Subjects = _context.Subjects.AsNoTracking();
+                var _Questions = _context.Questions.AsNoTracking();
+                var _Coursechapters = _context.Coursechapters.AsNoTracking();
+                var data =(from a in _Subjects
+                        join b in _Coursechapters on a.SubjectId equals b.SubjecId
+                        join c in _Questions on b.ChapterId equals c.CourseChapterId
+                        group new { a.SubjectId, a.SubjectName } by new { a.SubjectId, a.SubjectName } into g
+                        select new DataQuestion
+                        {
+                            SubjectName = g.Key.SubjectName,
+                            TotalQuestion = g.Count()  
+                        }).ToList();
                 return new
                 {
                     message = "Successfully",
