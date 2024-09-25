@@ -277,6 +277,7 @@ namespace be.Repositories.UserRepository
                 updateUser.Gender = user.Gender;
                 updateUser.SchoolName = user.SchoolName;
                 updateUser.Avatar = user.Avatar;
+                _context.Accounts.Update(updateUser);
                 _context.SaveChanges();
                 return new
                 {
