@@ -3,6 +3,8 @@ using be.Models;
 using Microsoft.Identity.Client;
 using Microsoft.EntityFrameworkCore;
 using be.Helper;
+using be.Repositories.CouseCharter;
+using OfficeOpenXml;
 
 namespace be.Repositories.QuestionRepository
 {
@@ -37,6 +39,120 @@ namespace be.Repositories.QuestionRepository
             {
                 topic.TotalQuestion = count;
                 _context.SaveChanges();
+            }
+        }
+        public async Task<string> AddExcelQuestionInTopicID(IFormFile file, int AccountId, int TopicID)
+        {
+            try
+            {
+                var checkCource = await _context.Topics.Where(a => a.TopicId == TopicID).FirstOrDefaultAsync();
+                if (checkCource == null)
+                {
+                    throw new Exception("Topic not exits.");
+                }
+                if (file == null || file.Length == 0) { throw new Exception("File not exist!!"); }
+                else
+                {
+                    string ExtensionFile = Path.GetExtension(Path.GetFileName(file.FileName));
+                    string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                    fileName = Guid.NewGuid().ToString() + ExtensionFile;
+
+                    if ((ExtensionFile == ".xlsx") || (ExtensionFile == ".xls"))
+                    {
+                        using (var stream = new MemoryStream())
+                        {
+                            file.CopyTo(stream);
+                            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                            using (var package = new ExcelPackage(stream))
+                            {
+                                var worksheet = package.Workbook.Worksheets[0];
+                                if (worksheet.Dimension == null)
+                                {
+                                    throw new Exception("The worksheet is empty!!");
+                                }
+                                else
+                                {
+                                    int totalRows = worksheet.Dimension.Rows;
+                                    var dataToInsert = new List<ExcelUploadQuestion>();
+                                    var uniqueDataDictionary = new Dictionary<string, int>();
+                                    for (int row = 5; row <= totalRows; row++)
+                                    {
+                                        var data_ = new ExcelUploadQuestion
+                                        {
+                                            UrlImage = worksheet.Cells[row, 2].Value?.ToString() ?? "",
+                                            QuestionContext = worksheet.Cells[row, 3].Value?.ToString() ?? "",
+                                            OptionA = worksheet.Cells[row, 4].Value?.ToString() ?? "",
+                                            OptionB = worksheet.Cells[row, 5].Value?.ToString() ?? "",
+                                            OptionC = worksheet.Cells[row, 6].Value?.ToString() ?? "",
+                                            OptionD = worksheet.Cells[row, 7].Value?.ToString() ?? "",
+                                            Solution = worksheet.Cells[row, 8].Value?.ToString() ?? "",
+                                            Answer = worksheet.Cells[row, 9].Value?.ToString() ?? "",
+                                            LevelName = worksheet.Cells[row, 1].Value?.ToString() ?? ""
+                                        };
+                                        string uniqueKey = $"{data_.UrlImage}-{data_.QuestionContext}-{data_.OptionA}-{data_.OptionB}-{data_.OptionC}-{data_.OptionD}-{data_.Solution}-{data_.LevelName}";
+
+                                        if (!uniqueDataDictionary.ContainsKey(uniqueKey))
+                                        {
+                                            uniqueDataDictionary.Add(uniqueKey, row);
+                                            dataToInsert.Add(data_);
+                                        }
+                                    }
+                                    var _Answer = _context.Answers.AsNoTracking();
+                                    var _Levels = _context.Levels.AsNoTracking();
+                                    var _Rerult = new List<Question>();
+                                    foreach (var item in dataToInsert)
+                                    {
+                                        if (!string.IsNullOrEmpty(item.QuestionContext) &&
+                                            !string.IsNullOrEmpty(item.OptionA) &&
+                                            !string.IsNullOrEmpty(item.OptionB) &&
+                                            !string.IsNullOrEmpty(item.OptionC) &&
+                                            !string.IsNullOrEmpty(item.OptionD))
+                                        {
+                                            _Rerult.Add(new Question()
+                                            {
+                                                DateCreated = DateTime.UtcNow.AddHours(7),
+                                                DateUpdated = DateTime.UtcNow.AddHours(7),
+                                                DateDelete = DateTime.UtcNow.AddHours(7),
+                                                TopicId = TopicID,
+                                                AccountId = AccountId,
+                                                UserCreated = AccountId,
+                                                UserUpdated = AccountId,
+                                                UserDelete = AccountId,
+                                                QuestionContext = item.QuestionContext,
+                                                AnswerId = _Answer.Where(a => a.AnswerName == item.Answer).FirstOrDefault()?.AnswerId ?? 0,
+                                                OptionA = item.OptionA,
+                                                OptionB = item.OptionB,
+                                                OptionC = item.OptionC,
+                                                OptionD = item.OptionD,
+                                                Solution = item.Solution,
+                                                Image = item.UrlImage,
+                                                Status = _defines.ACTIVE_STRING,
+                                                IsDelete = false,
+                                                LevelId = _Levels.Where(a => a.LevelName == item.LevelName).FirstOrDefault()?.LevelId ?? 0,
+                                            });
+                                        }
+                                    }
+                                    if (_Rerult.Count() > 0)
+                                    {
+                                        _context.ChangeTracker.AutoDetectChangesEnabled = false;
+                                        await _context.Questions.AddRangeAsync(_Rerult);
+                                        await _context.SaveChangesAsync();
+                                        _context.ChangeTracker.AutoDetectChangesEnabled = true;
+                                    }
+                                    return $"Upload success {_Rerult.Count()} question";
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception("Not an excel file, please try again!!");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
         }
 

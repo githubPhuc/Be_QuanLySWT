@@ -13,6 +13,7 @@ namespace be.Services.QuestionService
         public object ChangeStatusQuestion(int questionId, string status);
         public object EditQuestion(EditQuestionDTO questionDTO);
         public object ApproveAllQuestionOfTopic(int topicId);
+        public Task<string> AddExcelQuestionInTopicID(IFormFile file, int AccountId, int TopicID);
 
 
     }

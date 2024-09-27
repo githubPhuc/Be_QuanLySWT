@@ -17,6 +17,24 @@ namespace be.Controllers
             _questionService = QuestionService;
             _configuration = configuration;
         }
+        [HttpPost("AddExcelQuestionInTopicID")]
+        public async Task<ActionResult> AddExcelQuestionInTopicID(IFormFile file, int AccountId, int TopicID)
+        {
+            ReponserApiService<string> responseAPI = new ReponserApiService<string>();
+            try
+            {
+                var data = await _questionService.AddExcelQuestionInTopicID(file, AccountId, TopicID);
+                responseAPI.Data = null;
+                responseAPI.Count = 1;
+                responseAPI.Message = data;
+                return Ok(responseAPI);
+            }
+            catch (Exception ex)
+            {
+                responseAPI.Message = ex.Message;
+                return BadRequest(responseAPI);
+            }
+        }
 
         [HttpGet("getQuestionByTopicId")]
         public async Task<ActionResult> GetQuestionByTopicId(int topicId)

@@ -322,7 +322,7 @@ namespace be.Repositories.TopicRepository
                                      join questionTest in _context.Questiontests on question.QuestionId equals questionTest.QuestionId
                                      join testDetail in _context.Testdetails on questionTest.TestDetailId equals testDetail.TestDetailId
                                      join account in _context.Accounts on testDetail.AccountId equals account.AccountId
-                                     join subject in _context.Subjects on question.CourseChapterId equals subject.SubjectId
+                                     join subject in _context.Subjects on topic.SubjectId equals subject.SubjectId
                                      where account.AccountId == accountId
                                      && testDetail.Submitted == true && topic.IsDelete == false && topic.Status == _Defines.ACTIVE_STRING
                                      select new
@@ -438,7 +438,12 @@ namespace be.Repositories.TopicRepository
                 };
             }
         }
-        
+        //public async Task<object> GetTopicByGrade(int? grade, int subjectId, int? topicType, int accountId)
+        //{
+
+        //    return "";
+        //}
+
         public object GetTopicById(int topicId)
         {
             var result = from topic in _context.Topics where topic.TopicId == topicId && topic.IsDelete == false

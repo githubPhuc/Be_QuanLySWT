@@ -24,6 +24,8 @@ namespace be.Services.QuestionService
         }
         public async Task<object> GetQuestionByTopicIdInUser(int topicId)
         => await _questionRepository.GetQuestionByTopicIdInUser(topicId);
+        public async Task<string> AddExcelQuestionInTopicID(IFormFile file, int AccountId, int TopicID)
+        => await _questionRepository.AddExcelQuestionInTopicID(file,AccountId,TopicID);
         
         public object ChangeStatusQuestion(int questionId, string status)
         {

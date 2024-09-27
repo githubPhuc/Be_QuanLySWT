@@ -5,6 +5,7 @@ namespace be.Repositories.QuestionRepository
 {
     public interface IQuestionRepository
     {
+        public Task<string> AddExcelQuestionInTopicID(IFormFile file, int AccountId, int TopicID);
         Task<object> GetQuestionByTopicId(int topicId);
         public void AddQuestionByExcel(Question question);
         public Task<object> GetQuestionByTopicIdInUser(int topicId);
