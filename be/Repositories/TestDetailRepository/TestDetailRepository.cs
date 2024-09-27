@@ -244,6 +244,7 @@ namespace be.Repositories.TestDetailRepository
                                     where questionTest.TestDetailId == testDetailId
                                     select new
                                     {
+                                        DapAnDung = (question.AnswerId == questionTest.AnswerId)?true:false,
                                         answerRight = question.AnswerId,
                                         answerChoose = questionTest.AnswerId
                                     }).ToList();
@@ -264,15 +265,7 @@ namespace be.Repositories.TestDetailRepository
                         status = 200,
                     };
                 }
-                float count = 0;
-                foreach (var item in listQuestion)
-                {
-                    if (item.answerRight == item.answerChoose)
-                    {
-                        count++;
-                    }
-                }
-                string score = ((10.0 / listQuestion.Count())* count).ToString("F2");
+                string score = ((10.0 / listQuestion.Count()) * listQuestion.Where(a=>a.DapAnDung==true).Count()).ToString("F2");
                 dataUpdate.Score = Convert.ToDouble(score);
                 dataUpdate.Submitted = true;
                 dataUpdate.DateCreated = DateTime.Now;

@@ -19,6 +19,14 @@ namespace be.Repositories.QuestionRepository
         public void AddQuestionByExcel(Question question)
         {
             question.Status = _defines.ACTIVE_STRING;
+            question.AccountId = question.AccountId;
+            question.UserCreated = question.AccountId;
+            question.UserDelete = question.AccountId;
+            question.UserUpdated = question.AccountId;
+            question.DateCreated = DateTime.Now;
+            question.DateDelete = DateTime.Now;
+            question.DateUpdated = DateTime.Now;
+            question.IsDelete = false;
             _context.Questions.Add(question);
             _context.SaveChanges();
 
@@ -98,7 +106,13 @@ namespace be.Repositories.QuestionRepository
                 OptionD = questionDTO.OptionD,
                 Solution = questionDTO.Solution,
                 Status = _defines.ACTIVE_STRING,
-                DateCreated = DateTime.Now
+                DateCreated = DateTime.Now,
+                DateUpdated = DateTime.Now,
+                DateDelete = DateTime.Now,
+                IsDelete = false,
+                UserCreated = questionDTO.AccountId,
+                UserDelete = questionDTO.AccountId,
+                UserUpdated = questionDTO.AccountId,
             };
 
             try
@@ -152,6 +166,7 @@ namespace be.Repositories.QuestionRepository
                 question.AnswerId = questionDTO.AnswerId;
                 question.Solution = questionDTO.Solution;
                 question.DateUpdated = DateTime.Now;
+                _context.Questions.Update(question);
                 _context.SaveChanges();
 
                 return new
