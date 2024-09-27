@@ -285,7 +285,9 @@ namespace be.Repositories.ModRepository
                                         DateUpdated = a.DateUpdated,
                                         OptionA = a.OptionA,
                                         OptionB = a.OptionB,
-                                        accountCreated = _Accounts.Where(a=>a.AccountId == a.UserCreated).FirstOrDefault(),
+                                        accountCreated = _Accounts.Where(z => z.AccountId == a.UserCreated)
+                                                      .Select(z => z.FullName)
+                                                      .FirstOrDefault() ?? "",
                                         Answer = _Answers.Where(z=>z.AnswerId == a.AnswerId).FirstOrDefault(),
                                         CourseChapter = _CourseChapters.Where(z=>z.ChapterId == a.CourseChapterId).FirstOrDefault(),
                                         CourseChapterId = a.CourseChapterId,

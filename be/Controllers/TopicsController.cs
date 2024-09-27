@@ -106,11 +106,11 @@ namespace be.Controllers
         }
 
         [HttpPost("editTopic")]
-        public async Task<ActionResult> EditTopic(EditTopic editTopic)
+        public async Task<ActionResult> EditTopic(EditTopic model)
         {
             try
             {
-                var result = _topicService.UpdateTopic(editTopic);
+                var result = _topicService.UpdateTopic(model);
                 return Ok(result);
             }
             catch
