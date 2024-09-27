@@ -18,6 +18,7 @@ namespace be.Repositories.QuestionRepository
 
         public void AddQuestionByExcel(Question question)
         {
+            question.Status = _defines.ACTIVE_STRING;
             _context.Questions.Add(question);
             _context.SaveChanges();
 

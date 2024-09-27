@@ -124,7 +124,7 @@
                                                 Tài khoản: <strong>{email}</strong><br />
                                                 Mật khẩu: <strong>{password}</strong><br />
                                                 Không chia sẻ mật khẩu với bất kỳ ai. Vui lòng đổi mật khẩu sau khi nhận được email này. <br /><br />
-                                                Kích hoạt tài khoản: <a href=https://localhost:3000/RegisterConfirm.html?email={email} target=""_blank""
+                                                Kích hoạt tài khoản: <a href=http://localhost:3000/RegisterConfirm?email={email} target=""_blank""
                                                     style=""display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px;text-decoration: none; border-radius: 6px;"">Nhấn vào đây</a><br/>
                                                 Chúc bạn có trải nghiệm tốt.
                                             </td>
